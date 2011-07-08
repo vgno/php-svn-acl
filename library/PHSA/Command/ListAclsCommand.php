@@ -4,12 +4,11 @@ namespace PHSA\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Command\Command;
 
 /**
  * Command used to list the ACLs stored in the database
  */
-class ListAclsCommand extends Command {
+class ListAclsCommand extends BaseCommand {
     /**
      * Class constructor
      */
@@ -36,15 +35,7 @@ class ListAclsCommand extends Command {
      * @see \Symfony\Components\Console\Command\Command::execute()
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $configFile = $input->getOption('config-file');
-
-        if (empty($configFile) || !is_file($configFile)) {
-            throw new \InvalidArgumentException('Missing or invalid path to configuration file');
-        }
-
-        // Fetch configuration array
-        $config = require $configFile;
-        $driver = $config['database']['driver'];
+        $driver = $this->configuration['database']['driver'];
 
         $repositories = $input->getoption('repos');
         $users        = $input->getoption('user');
