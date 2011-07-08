@@ -1,0 +1,20 @@
+<?php
+return array(
+    // Database configuration
+    'database' => array(
+        'driver' => new PHSA\Database\Driver\MySQL(array(
+            'username' => '',
+            'password' => '',
+            'database' => '',
+            'hostname' => '',
+        ))
+    ),
+
+    // Parent directory of your repositories
+    'svnParentDir' => '',
+
+    // Subversion driver
+    'subversion' => array(
+        'driver' => new PHSA\Subversion\Driver\SvnExtension(),
+    ),
+);
