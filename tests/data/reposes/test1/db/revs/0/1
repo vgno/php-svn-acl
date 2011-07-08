@@ -1,0 +1,121 @@
+DELTA
+SVNENDREP
+DELTA
+SVNENDREP
+DELTA
+SVNENDREP
+DELTA
+SVNENDREP
+id: 4-1.0.r1/68
+type: file
+count: 0
+text: 1 0 4 0 d41d8cd98f00b204e9800998ecf8427e da39a3ee5e6b4b0d3255bfef95601890afd80709 0-0/_b
+cpath: /foo
+copyroot: 0 /
+
+id: 2-1.0.r1/226
+type: file
+count: 0
+text: 1 51 4 0 d41d8cd98f00b204e9800998ecf8427e da39a3ee5e6b4b0d3255bfef95601890afd80709 0-0/_e
+cpath: /bar/foo
+copyroot: 0 /
+
+PLAIN
+K 3
+foo
+V 17
+file 2-1.0.r1/226
+END
+ENDREP
+id: 0-1.0.r1/438
+type: dir
+count: 0
+text: 1 390 35 35 a0018992a84ce673a48a8324f9fdd45b
+cpath: /bar
+copyroot: 0 /
+
+id: a-1.0.r1/552
+type: file
+count: 0
+text: 1 17 4 0 d41d8cd98f00b204e9800998ecf8427e da39a3ee5e6b4b0d3255bfef95601890afd80709 0-0/_c
+cpath: /foobar/barfoo/foo
+copyroot: 0 /
+
+id: 8-1.0.r1/726
+type: file
+count: 0
+text: 1 34 4 0 d41d8cd98f00b204e9800998ecf8427e da39a3ee5e6b4b0d3255bfef95601890afd80709 0-0/_d
+cpath: /foobar/barfoo/bar
+copyroot: 0 /
+
+PLAIN
+K 3
+bar
+V 17
+file 8-1.0.r1/726
+K 3
+foo
+V 17
+file a-1.0.r1/552
+END
+ENDREP
+id: 6-1.0.r1/979
+type: dir
+count: 0
+text: 1 900 66 66 f293355b6ec5ad189d080160f8478897
+cpath: /foobar/barfoo
+copyroot: 0 /
+
+PLAIN
+K 6
+barfoo
+V 16
+dir 6-1.0.r1/979
+END
+ENDREP
+id: 5-1.0.r1/1153
+type: dir
+count: 0
+text: 1 1103 37 37 e534e6b642afea405afd26c20da789c0
+cpath: /foobar
+copyroot: 0 /
+
+PLAIN
+K 3
+bar
+V 16
+dir 0-1.0.r1/438
+K 3
+foo
+V 16
+file 4-1.0.r1/68
+K 6
+foobar
+V 17
+dir 5-1.0.r1/1153
+END
+ENDREP
+id: 0.0.r1/1383
+type: dir
+pred: 0.0.r0/17
+count: 1
+text: 1 1272 98 98 ea7d625cdd20fa7f5c3c3f66d2947e11
+cpath: /
+copyroot: 0 /
+
+_6.0.t0-0 add-dir false false /foobar/barfoo
+
+_4.0.t0-0 add-file true false /foo
+
+_a.0.t0-0 add-file true false /foobar/barfoo/foo
+
+_0.0.t0-0 add-dir false false /bar
+
+_8.0.t0-0 add-file true false /foobar/barfoo/bar
+
+_2.0.t0-0 add-file true false /bar/foo
+
+_5.0.t0-0 add-dir false false /foobar
+
+
+1383 1510
