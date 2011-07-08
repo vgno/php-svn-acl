@@ -15,10 +15,12 @@ class SvnExtension implements DriverInterface  {
      */
     public function __construct() {
         if (!extension_loaded('svn')) {
+            // @codeCoverageIgnoreStart
             throw new \RuntimeException(
                 'This driver requires the svn extension to be installed and loaded'
             );
         }
+        // @codeCoverageIgnoreEnd
     }
 
     /**

@@ -8,6 +8,7 @@
 
   <php>
     <includePath>library</includePath>
+    <const name="TESTS_DATA_DIR">tests/data</const>
   </php>
 
   <logging>
