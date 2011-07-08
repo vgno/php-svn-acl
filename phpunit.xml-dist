@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false" backupStaticAttributes="false" syntaxCheck="false" bootstrap="tests/bootstrap.php">
+  <testsuites>
+    <testsuite name="Unit tests">
+      <directory suffix="Test.php">tests/unit/PHSA</directory>
+    </testsuite>
+  </testsuites>
+
+  <php>
+    <includePath>library</includePath>
+  </php>
+
+  <logging>
+    <log type="coverage-html" target="build/coverage" title="Code coverage for PHSA" charset="UTF-8" yui="true" highlight="true" />
+    <log type="coverage-clover" target="build/logs/clover.xml" />
+    <log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="true" />
+    <log type="json" target="build/logs/phpunit.json" logIncompleteSkipped="true" />
+  </logging>
+
+  <filter>
+    <whitelist addUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">library/PHSA</directory>
+    </whitelist>
+  </filter>
+</phpunit>

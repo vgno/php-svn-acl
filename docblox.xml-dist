@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<docblox>
+  <parser>
+    <target>build/api</target>
+  </parser>
+  <transformer>
+    <target>build/api</target>
+  </transformer>
+  <transformations>
+    <template name="old_ocean" />
+  </transformations>
+  <files>
+    <directory>library/PHSA</directory>
+  </files>
+</docblox>
