@@ -2,6 +2,7 @@
 namespace PHSA;
 
 use PHSA\Command\ListReposesCommand;
+use PHSA\Command\ListAclsCommand;
 use Symfony\Component\Console;
 
 /**
@@ -16,6 +17,7 @@ class Application extends Console\Application {
 
         // Register commands
         $this->add(new ListReposesCommand());
+        $this->add(new ListAclsCommand());
 
         // Add global options
         $this->getDefinition()->addOption(
