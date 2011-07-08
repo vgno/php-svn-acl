@@ -27,7 +27,7 @@ class ListAclsCommand extends Command {
         $this->addOption('role', null, InputOption::VALUE_OPTIONAL,
                          'Show only rules with this rols. Values can be "user" or "group"');
         $this->addOption('rule', null, InputOption::VALUE_OPTIONAL,
-                         'Show only rules with this type. Values can be "allow" or "deny"');
+                         'Show only rules of this type. Values can be "allow" or "deny"');
     }
 
     /**
@@ -84,7 +84,7 @@ class ListAclsCommand extends Command {
                     str_pad($rule->user, 18, ' ', STR_PAD_BOTH) . '|' .
                     str_pad($rule->group, 18, ' ', STR_PAD_BOTH) . '|' .
                     str_pad($rule->path, 18, ' ', STR_PAD_BOTH) . '|' .
-                    str_pad($rule->type, 9, ' ', STR_PAD_LEFT)
+                    str_pad($rule->rule, 9, ' ', STR_PAD_LEFT)
                 );
             }
         }

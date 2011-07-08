@@ -66,7 +66,7 @@ class MySQL implements DriverInterface {
     /**
      * @see PHSA\Database\DriverInterface::getAcls()
      */
-    public function getAcls(array $repositories, array $users, array $groups, $role = null, $type = null) {
+    public function getAcls(array $repositories, array $users, array $groups, $role = null, $rule = null) {
         $params = array();
         $whereClause = array();
 
@@ -91,9 +91,9 @@ class MySQL implements DriverInterface {
             $whereClause[] = "username IS NULL";
         }
 
-        if ($type !== null) {
+        if ($rule !== null) {
             $whereClause[] = "rule = ?";
-            $params[] = $type;
+            $params[] = $rule;
         }
 
         // Build query
@@ -117,7 +117,7 @@ class MySQL implements DriverInterface {
             $rule->group = $row['groupname'] ?: ' - ';
             $rule->repos = $row['repository'];
             $rule->path  = $row['path'] ?: '<root>';
-            $rule->type  = $row['rule'];
+            $rule->rule  = $row['rule'];
 
             $ruleset->addRule($rule);
         }
