@@ -14,7 +14,7 @@ class ListReposesCommand extends Command {
      * Class constructor
      */
     public function __construct() {
-        parent::__construct('list-reposes');
+        parent::__construct('reposes');
         $this->setDescription('List available repositories');
         $this->setHelp('Display all available Subversion repositories');
     }
