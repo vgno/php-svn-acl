@@ -31,6 +31,6 @@ class Version {
      * @return string
      */
     static public function getVersionString() {
-        return 'PHSA-' . self::getVersionNumber() . ' by Christer Edvartsen.';
+        return 'PHSA-' . self::getVersionNumber() . ' by Christer Edvartsen';
     }
 }
