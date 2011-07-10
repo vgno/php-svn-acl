@@ -1,7 +1,28 @@
 <?php
 namespace PHSA\Database;
 
+/**
+ * Interface for database drivers
+ */
 interface DriverInterface {
+    /**#@+
+     * Roles
+     *
+     * @var string
+     */
+    const ROLE_USER  = 'user';
+    const ROLE_GROUP = 'group';
+    /**#@-*/
+
+    /**#@+
+     * Rules
+     *
+     * @var string
+     */
+    const RULE_ALLOW = 'allow';
+    const RULE_DENY  = 'deny';
+    /**#@-*/
+
     /**
      * Get ACLs based on the arguments
      *
@@ -13,5 +34,5 @@ interface DriverInterface {
      *
      * @return PHSA\Acl\Ruleset
      */
-    function getAcls(array $repositories, array $users, array $groups, $role = null, $rule = null);
+    function getAcls(array $repositories = array(), array $users = array(), array $groups = array(), $role = null, $rule = null);
 }

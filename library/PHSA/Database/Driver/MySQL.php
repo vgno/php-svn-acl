@@ -1,13 +1,14 @@
 <?php
 namespace PHSA\Database\Driver;
 
+use PHSA\Database\Driver;
 use PHSA\Database\DriverInterface;
 use PHSA\Acl;
 
 /**
  * MySQL driver
  */
-class MySQL implements DriverInterface {
+class MySQL extends Driver implements DriverInterface {
     /**
      * PDO instance
      *
@@ -36,7 +37,7 @@ class MySQL implements DriverInterface {
      *
      * @return \PDO
      */
-    private function getDb() {
+    public function getDb() {
         if ($this->pdo === null) {
             $options = array(
                 \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
@@ -66,7 +67,7 @@ class MySQL implements DriverInterface {
     /**
      * @see PHSA\Database\DriverInterface::getAcls()
      */
-    public function getAcls(array $repositories, array $users, array $groups, $role = null, $rule = null) {
+    public function getAcls(array $repositories = array(), array $users = array(), array $groups = array(), $role = null, $rule = null) {
         $params = array();
         $whereClause = array();
 
@@ -85,13 +86,13 @@ class MySQL implements DriverInterface {
             $params = array_merge($params, $groups);
         }
 
-        if ($role === 'user') {
+        if ($role === DriverInterface::ROLE_USER) {
             $whereClause[] = "groupname IS NULL";
-        } else if ($role === 'group') {
+        } else if ($role === DriverInterface::ROLE_GROUP) {
             $whereClause[] = "username IS NULL";
         }
 
-        if ($rule !== null) {
+        if ($rule === DriverInterface::RULE_ALLOW || $rule === DriverInterface::RULE_DENY) {
             $whereClause[] = "rule = ?";
             $params[] = $rule;
         }
