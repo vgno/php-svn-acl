@@ -18,6 +18,7 @@ class Application extends Console\Application {
         $this->add(new Command\ListReposes());
         $this->add(new Command\ListAcls());
         $this->add(new Command\AllowUser());
+        $this->add(new Command\DenyUser());
 
         // Add global options
         $this->getDefinition()->addOption(

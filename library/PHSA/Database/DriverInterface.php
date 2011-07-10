@@ -46,4 +46,15 @@ interface DriverInterface {
      * @return boolean True on success or false otherwise
      */
     function allowUser($user, $repository, $path = null);
+
+    /**
+     * Deny a user access to a repository
+     *
+     * @param string $user Username to deny access
+     * @param string $repository Repository to deny access to
+     * @param string $path Optional path in the repository
+     *
+     * @return boolean True on success or false otherwise
+     */
+    function denyUser($user, $repository, $path = null);
 }

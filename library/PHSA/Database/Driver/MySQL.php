@@ -130,6 +130,27 @@ class MySQL extends Driver implements DriverInterface {
      * @see PHSA\Database\DriverInterface::allowUser()
      */
     public function allowUser($user, $repository, $path = null) {
+        return $this->addUserRule($user, $repository, $path, DriverInterface::RULE_ALLOW);
+    }
+
+    /**
+     * @see PHSA\Database\DriverInterface::allowUser()
+     */
+    public function denyUser($user, $repository, $path = null) {
+        return $this->addUserRule($user, $repository, $path, DriverInterface::RULE_DENY);
+    }
+
+    /**
+     * Add a user rule
+     *
+     * @param string $user
+     * @param string $repository
+     * @param string $path
+     * @param string $rule
+     *
+     * @return boolean
+     */
+    private function addUserRule($user, $repository, $path, $rule) {
         $sql = "
             INSERT INTO rules (
                 username,
@@ -140,7 +161,7 @@ class MySQL extends Driver implements DriverInterface {
                 :username,
                 :repository,
                 :path,
-                'allow'
+                :rule
             )
         ";
         $stmt = $this->getDb()->prepare($sql);
@@ -149,6 +170,7 @@ class MySQL extends Driver implements DriverInterface {
             ':username'   => $user,
             ':repository' => $repository,
             ':path'       => $path,
+            ':rule'       => $rule,
         ));
     }
 
