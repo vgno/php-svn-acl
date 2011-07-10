@@ -35,4 +35,15 @@ interface DriverInterface {
      * @return PHSA\Acl\Ruleset
      */
     function getAcls(array $repositories = array(), array $users = array(), array $groups = array(), $role = null, $rule = null);
+
+    /**
+     * Allow a user access to a repository
+     *
+     * @param string $user Username to allow access
+     * @param string $repository Repository to allow access to
+     * @param string $path Optional path in the repository
+     *
+     * @return boolean True on success or false otherwise
+     */
+    function allowUser($user, $repository, $path = null);
 }

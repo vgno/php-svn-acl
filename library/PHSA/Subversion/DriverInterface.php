@@ -12,4 +12,12 @@ interface DriverInterface {
      * @return boolean
      */
     function validRepository($path);
+
+    /**
+     * List all valid repositories in a path
+     *
+     * @param string $path Path to look for Subversion repositories
+     * @return string[]
+     */
+    function listRepositories($path);
 }

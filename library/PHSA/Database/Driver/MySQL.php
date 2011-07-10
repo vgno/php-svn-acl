@@ -127,6 +127,32 @@ class MySQL extends Driver implements DriverInterface {
     }
 
     /**
+     * @see PHSA\Database\DriverInterface::allowUser()
+     */
+    public function allowUser($user, $repository, $path = null) {
+        $sql = "
+            INSERT INTO rules (
+                username,
+                repository,
+                path,
+                rule
+            ) VALUES (
+                :username,
+                :repository,
+                :path,
+                'allow'
+            )
+        ";
+        $stmt = $this->getDb()->prepare($sql);
+
+        return (boolean) $stmt->execute(array(
+            ':username'   => $user,
+            ':repository' => $repository,
+            ':path'       => $path,
+        ));
+    }
+
+    /**
      * Get a placeholder expression with as many placeholders as $columns
      *
      * @param int $columns

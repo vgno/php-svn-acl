@@ -38,4 +38,24 @@ class SvnExtension implements DriverInterface  {
 
         return false;
     }
+
+    /**
+     * @see PHSA\Subversion\DriverInterface::listRepositories()
+     */
+    public function listRepositories($path) {
+        $iterator = new \DirectoryIterator($path);
+        $repositories = array();
+
+        foreach ($iterator as $entry) {
+            if ($entry->isDot()) {
+                continue;
+            }
+
+            if ($entry->isDir() && $this->validRepository($entry->getPathname())) {
+                $repositories[] = (string) $entry;
+            }
+        }
+
+        return $repositories;
+    }
 }

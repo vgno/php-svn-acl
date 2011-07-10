@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Command used to list the repositories in the svnParentDir directory specified in the
  * configuration
  */
-class ListReposesCommand extends BaseCommand {
+class ListReposes extends BaseCommand {
     /**
      * Class constructor
      */
@@ -24,25 +24,7 @@ class ListReposesCommand extends BaseCommand {
      * @see \Symfony\Components\Console\Command\Command::execute()
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
-        $repositories = array();
-
-        // Fetch driver
-        $driver = $this->configuration['subversion']['driver'];
-        $svnParentDir = $this->configuration['svnParentDir'];
-
-        $iterator = new \DirectoryIterator($svnParentDir);
-
-        foreach ($iterator as $entry) {
-            if ($entry->isDot()) {
-                continue;
-            }
-
-            if ($entry->isDir() && $driver->validRepository($entry->getPathname())) {
-                $repositories[] = (string) $entry;
-            }
-        }
-
-        sort($repositories);
+        $repositories = $this->configuration['subversion']['driver']->listRepositories($this->configuration['svnParentDir']);
 
         if (!count($repositories)) {
             $output->writeln('No available repositories at the specified path');

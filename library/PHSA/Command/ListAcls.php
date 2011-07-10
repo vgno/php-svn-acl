@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Command used to list the ACLs stored in the database
  */
-class ListAclsCommand extends BaseCommand {
+class ListAcls extends BaseCommand {
     /**
      * Class constructor
      */
