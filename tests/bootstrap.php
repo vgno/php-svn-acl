@@ -3,7 +3,11 @@ spl_autoload_register(
     function($className) {
         if (!class_exists($className, false) && !interface_exists($className, false)) {
             $file = str_replace('\\', DIRECTORY_SEPARATOR, $className) . '.php';
-            $dirs = array(__DIR__ . '/../library', __DIR__ . '/unit') + explode(PATH_SEPARATOR, get_include_path());
+            $dirs = array(
+                __DIR__ . '/../library',
+                __DIR__ . '/unit',
+                __DIR__ . '/integration'
+            );
 
             foreach ($dirs as $path) {
                 $fullPath = realpath($path . '/' .  $file);
