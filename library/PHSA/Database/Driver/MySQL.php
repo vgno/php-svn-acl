@@ -141,7 +141,7 @@ class MySQL extends Driver implements DriverInterface {
     }
 
     /**
-     * Add a user rule
+     * Add a user specific rule
      *
      * @param string $user
      * @param string $repository
@@ -151,14 +151,59 @@ class MySQL extends Driver implements DriverInterface {
      * @return boolean
      */
     private function addUserRule($user, $repository, $path, $rule) {
+        return $this->addRule($user, null, $repository, $path, $rule);
+    }
+
+    /**
+     * @see PHSA\Database\DriverInterface::allowGroup()
+     */
+    public function allowGroup($group, $repository, $path = null) {
+        return $this->addGroupRule($group, $repository, $path, DriverInterface::RULE_ALLOW);
+    }
+
+    /**
+     * @see PHSA\Database\DriverInterface::allowUser()
+     */
+    public function denyGroup($group, $repository, $path = null) {
+        return $this->addGroupRule($group, $repository, $path, DriverInterface::RULE_DENY);
+    }
+
+    /**
+     * Add a group specific rule
+     *
+     * @param string $group
+     * @param string $repository
+     * @param string $path
+     * @param string $rule
+     *
+     * @return boolean
+     */
+    private function addGroupRule($group, $repository, $path, $rule) {
+        return $this->addRule(null, $group, $repository, $path, $rule);
+    }
+
+    /**
+     * Add a rule
+     *
+     * @param string $user
+     * @param string $group
+     * @param string $repository
+     * @param string $path
+     * @param string $rule
+     *
+     * @return boolean
+     */
+    private function addRule($user, $group, $repository, $path, $rule) {
         $sql = "
             INSERT INTO rules (
                 username,
+                groupname,
                 repository,
                 path,
                 rule
             ) VALUES (
                 :username,
+                :groupname,
                 :repository,
                 :path,
                 :rule
@@ -168,6 +213,7 @@ class MySQL extends Driver implements DriverInterface {
 
         return (boolean) $stmt->execute(array(
             ':username'   => $user,
+            ':groupname'  => $group,
             ':repository' => $repository,
             ':path'       => $path,
             ':rule'       => $rule,

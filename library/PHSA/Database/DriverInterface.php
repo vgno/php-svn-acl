@@ -57,4 +57,26 @@ interface DriverInterface {
      * @return boolean True on success or false otherwise
      */
     function denyUser($user, $repository, $path = null);
+
+    /**
+     * Allow a group access to a repository
+     *
+     * @param string $group Name of group to allow access
+     * @param string $repository Repository to allow access to
+     * @param string $path Optional path in the repository
+     *
+     * @return boolean True on success or false otherwise
+     */
+    function allowGroup($group, $repository, $path = null);
+
+    /**
+     * Deny a group access to a repository
+     *
+     * @param string $group Name of group to deny access
+     * @param string $repository Repository to deny access to
+     * @param string $path Optional path in the repository
+     *
+     * @return boolean True on success or false otherwise
+     */
+    function denyGroup($group, $repository, $path = null);
 }
