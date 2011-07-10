@@ -27,12 +27,12 @@ CREATE TABLE `rules` (
   `username` varchar(100) COLLATE utf8_danish_ci DEFAULT NULL,
   `groupname` varchar(100) COLLATE utf8_danish_ci DEFAULT NULL,
   `repository` varchar(100) COLLATE utf8_danish_ci NOT NULL,
-  `path` text COLLATE utf8_danish_ci NOT NULL,
+  `path` text COLLATE utf8_danish_ci,
   `rule` enum('allow','deny') COLLATE utf8_danish_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `username` (`username`),
-  KEY `groupname` (`groupname`),
-  KEY `repository` (`repository`)
+  KEY `repository` (`repository`),
+  KEY `groupname` (`groupname`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -45,4 +45,4 @@ CREATE TABLE `rules` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2011-07-08 13:33:24
+-- Dump completed on 2011-07-10 13:40:08
