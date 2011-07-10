@@ -4,11 +4,19 @@
     <testsuite name="Unit tests">
       <directory suffix="Test.php">tests/unit/PHSA</directory>
     </testsuite>
+    <testsuite name="Integration tests">
+      <directory suffix="Test.php">tests/integration/PHSA</directory>
+    </testsuite>
   </testsuites>
 
   <php>
     <includePath>library</includePath>
-    <const name="TESTS_DATA_DIR">tests/data</const>
+    <const name="TESTS_DATA_DIR" value="tests/data" />
+    <const name="ENABLE_MYSQL_TESTS" value="false" />
+    <const name="PHSA_MYSQL_USERNAME" value="" />
+    <const name="PHSA_MYSQL_HOSTNAME" value="" />
+    <const name="PHSA_MYSQL_PASSWORD" value="" />
+    <const name="PHSA_MYSQL_DATABASE" value="" />
   </php>
 
   <logging>
