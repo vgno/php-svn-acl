@@ -15,6 +15,13 @@ class Rule {
     /**#@-*/
 
     /**
+     * ID of the rule (from the database)
+     *
+     * @var int
+     */
+    public $id;
+
+    /**
      * Name of the user
      *
      * @var string

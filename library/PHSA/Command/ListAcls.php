@@ -61,20 +61,22 @@ class ListAcls extends BaseCommand {
             $output->writeln('No rules matches your query. Broaden your search.');
         } else {
             $output->writeln(
-                str_pad('Repos', 9) . '|' .
-                str_pad('User', 18, ' ', STR_PAD_BOTH) . '|' .
-                str_pad('Group', 18, ' ', STR_PAD_BOTH) . '|' .
-                str_pad('Path', 18, ' ', STR_PAD_BOTH) . '|' .
+                str_pad('ID', 5) . '|' .
+                str_pad('Repos', 15, ' ', STR_PAD_BOTH) . '|' .
+                str_pad('User', 15, ' ', STR_PAD_BOTH) . '|' .
+                str_pad('Group', 15, ' ', STR_PAD_BOTH) . '|' .
+                str_pad('Path', 15, ' ', STR_PAD_BOTH) . '|' .
                 str_pad('Rule', 9, ' ', STR_PAD_LEFT)
             );
             $output->writeln(str_repeat('-', 80));
 
             foreach ($acls as $rule) {
                 $output->writeln(
-                    str_pad($rule->repos, 9) . '|' .
-                    str_pad($rule->user, 18, ' ', STR_PAD_BOTH) . '|' .
-                    str_pad($rule->group, 18, ' ', STR_PAD_BOTH) . '|' .
-                    str_pad($rule->path, 18, ' ', STR_PAD_BOTH) . '|' .
+                    str_pad($rule->id, 5) . '|' .
+                    str_pad($rule->repos, 15, ' ', STR_PAD_BOTH) . '|' .
+                    str_pad($rule->user, 15, ' ', STR_PAD_BOTH) . '|' .
+                    str_pad($rule->group, 15, ' ', STR_PAD_BOTH) . '|' .
+                    str_pad($rule->path, 15, ' ', STR_PAD_BOTH) . '|' .
                     str_pad($rule->rule, 9, ' ', STR_PAD_LEFT)
                 );
             }
