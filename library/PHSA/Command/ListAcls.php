@@ -43,7 +43,7 @@ class ListAcls extends BaseCommand {
         $role         = $input->getOption('role');
         $rule         = $input->getOption('rule');
 
-        $repositories = empty($repos) ? array() : array_map('trim', explode(',', $repositories));
+        $repositories = empty($repositories) ? array() : array_map('trim', explode(',', $repositories));
         $users        = empty($users) ? array() : array_map('trim', explode(',', $users));
         $groups       = empty($groups) ? array() : array_map('trim', explode(',', $groups));
 
