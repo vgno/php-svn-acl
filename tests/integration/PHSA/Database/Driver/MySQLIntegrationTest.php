@@ -35,16 +35,18 @@ class MySQLIntegrationTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function tearDown() {
-        // Truncate table
-        $this->driver->getDb()->query('TRUNCATE TABLE rules');
+        if (defined('ENABLE_MYSQL_TESTS') && ENABLE_MYSQL_TESTS) {
+            // Truncate table
+            $this->driver->getDb()->query('TRUNCATE TABLE rules');
 
-        // Reset the static pdo property
-        $property = new \ReflectionProperty('PHSA\Database\Driver\MySQL', 'pdo');
-        $property->setAccessible(true);
-        $property->setValue($this->driver, null);
+            // Reset the static pdo property
+            $property = new \ReflectionProperty('PHSA\Database\Driver\MySQL', 'pdo');
+            $property->setAccessible(true);
+            $property->setValue($this->driver, null);
 
-        // Destroy the driver
-        $this->driver = null;
+            // Destroy the driver
+            $this->driver = null;
+        }
     }
 
     public function testGetAcls() {
