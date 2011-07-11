@@ -79,4 +79,11 @@ interface DriverInterface {
      * @return boolean True on success or false otherwise
      */
     function denyGroup($group, $repository, $path = null);
+
+    /**
+     * Remove all rules from the database
+     *
+     * @return boolean True on success or false otherwise
+     */
+    function removeRules();
 }

@@ -222,6 +222,16 @@ class MySQL extends Driver implements DriverInterface {
     }
 
     /**
+     * @see PHSA\Database\DriverInterface::removeRules()
+     */
+    public function removeRules() {
+        $sql = "DELETE FROM rules";
+        $stmt = $this->getDb()->prepare($sql);
+
+        return (boolean) $stmt->execute();
+    }
+
+    /**
      * Get a placeholder expression with as many placeholders as $columns
      *
      * @param int $columns
