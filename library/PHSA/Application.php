@@ -21,6 +21,7 @@ class Application extends Console\Application {
         $this->add(new Command\AllowGroup());
         $this->add(new Command\DenyUser());
         $this->add(new Command\DenyGroup());
+        $this->add(new Command\Dump());
 
         // Add global options
         $this->getDefinition()->addOption(
