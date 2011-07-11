@@ -74,9 +74,9 @@ class ListAcls extends BaseCommand {
                 $output->writeln(
                     str_pad($rule->id, 5) . '|' .
                     str_pad($rule->repos, 15, ' ', STR_PAD_BOTH) . '|' .
-                    str_pad($rule->user, 15, ' ', STR_PAD_BOTH) . '|' .
-                    str_pad($rule->group, 15, ' ', STR_PAD_BOTH) . '|' .
-                    str_pad($rule->path, 15, ' ', STR_PAD_BOTH) . '|' .
+                    str_pad($rule->user ?: ' - ', 15, ' ', STR_PAD_BOTH) . '|' .
+                    str_pad($rule->group ?: ' - ', 15, ' ', STR_PAD_BOTH) . '|' .
+                    str_pad($rule->path ?: '<root>', 15, ' ', STR_PAD_BOTH) . '|' .
                     str_pad($rule->rule, 9, ' ', STR_PAD_LEFT)
                 );
             }

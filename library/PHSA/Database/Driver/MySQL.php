@@ -115,10 +115,10 @@ class MySQL extends Driver implements DriverInterface {
             $rule = new Acl\Rule();
 
             $rule->id    = $row['id'];
-            $rule->user  = $row['username'] ?: ' - ';
-            $rule->group = $row['groupname'] ?: ' - ';
+            $rule->user  = $row['username'];
+            $rule->group = $row['groupname'];
             $rule->repos = $row['repository'];
-            $rule->path  = $row['path'] ?: '<root>';
+            $rule->path  = $row['path'];
             $rule->rule  = $row['rule'];
 
             $ruleset->addRule($rule);
