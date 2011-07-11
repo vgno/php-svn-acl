@@ -54,7 +54,7 @@ class Dump extends BaseCommand {
         $document->appendChild($phsa);
         $phsa->appendChild($ruleset);
 
-        $output->write($document->saveXml());
+        $output->write($document->saveXml(), false, OutputInterface::OUTPUT_RAW);
     }
 }
 
