@@ -19,7 +19,7 @@ class ListReposes extends BaseCommand {
     }
 
     /**
-     * Execute the commend
+     * Execute the command
      *
      * @see \Symfony\Components\Console\Command\Command::execute()
      */
