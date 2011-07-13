@@ -72,7 +72,7 @@ class ListAcls extends BaseCommand {
                 str_pad('User', 15, ' ', STR_PAD_BOTH) . '|' .
                 str_pad('Group', 15, ' ', STR_PAD_BOTH) . '|' .
                 str_pad('Path', 15, ' ', STR_PAD_BOTH) . '|' .
-                str_pad('Rule', 9, ' ', STR_PAD_LEFT)
+                str_pad('Rule', 15, ' ', STR_PAD_BOTH)
             );
             $output->writeln(str_repeat('-', 80));
 
@@ -82,7 +82,7 @@ class ListAcls extends BaseCommand {
                     str_pad($rule->user ?: ' - ', 15, ' ', STR_PAD_BOTH) . '|' .
                     str_pad($rule->group ?: ' - ', 15, ' ', STR_PAD_BOTH) . '|' .
                     str_pad($rule->path ?: '<root>', 15, ' ', STR_PAD_BOTH) . '|' .
-                    str_pad($rule->rule, 9, ' ', STR_PAD_LEFT)
+                    str_pad($rule->rule, 15, ' ', STR_PAD_BOTH)
                 );
             }
         }
