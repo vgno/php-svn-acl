@@ -4,14 +4,7 @@ namespace PHSA\Database;
 /**
  * Query builder for the database drivers
  */
-class QueryBuilder {
-    /**
-     * Driver to use
-     *
-     * @var PHSA\Database\DriverInterface
-     */
-    private $driver;
-
+class Query {
     /**
      * Repositories to fetch
      *
@@ -48,19 +41,10 @@ class QueryBuilder {
     private $rule;
 
     /**
-     * Class constructor
-     *
-     * @param PHSA\Database\DriverInterface $driver
-     */
-    public function __construct(DriverInterface $driver) {
-        $this->driver = $driver;
-    }
-
-    /**
      * Set the repositories to fetch from
      *
      * @var string[]
-     * @return PHSA\Database\QueryBuilder
+     * @return PHSA\Database\Query
      */
     public function setRepositories(array $repositories) {
         $this->repositories = $repositories;
@@ -69,10 +53,19 @@ class QueryBuilder {
     }
 
     /**
+     * Get the repositories
+     *
+     * @return string[]
+     */
+    public function getRepositories() {
+        return $this->repositories;
+    }
+
+    /**
      * Set the users to fetch from
      *
      * @var string[]
-     * @return PHSA\Database\QueryBuilder
+     * @return PHSA\Database\Query
      */
     public function setUsers(array $users) {
         $this->users = $users;
@@ -81,10 +74,19 @@ class QueryBuilder {
     }
 
     /**
+     * Get users
+     *
+     * @return string[]
+     */
+    public function getUsers() {
+        return $this->users;
+    }
+
+    /**
      * Set the groups to fetch from
      *
      * @var string[]
-     * @return PHSA\Database\QueryBuilder
+     * @return PHSA\Database\Query
      */
     public function setGroups(array $groups) {
         $this->groups = $groups;
@@ -93,10 +95,19 @@ class QueryBuilder {
     }
 
     /**
+     * Get groups
+     *
+     * @var string[]
+     */
+    public function getGroups() {
+        return $this->groups;
+    }
+
+    /**
      * Set the role to fetch
      *
      * @var string
-     * @return PHSA\Database\QueryBuilder
+     * @return PHSA\Database\Query
      */
     public function setRole($role) {
         $this->role = $role;
@@ -105,10 +116,19 @@ class QueryBuilder {
     }
 
     /**
+     * Get the role
+     *
+     * @return string
+     */
+    public function getRole() {
+        return $this->role;
+    }
+
+    /**
      * Set the rule to fetch
      *
      * @var string
-     * @return PHSA\Database\QueryBuilder
+     * @return PHSA\Database\Query
      */
     public function setRule($rule) {
         $this->rule = $rule;
@@ -117,11 +137,33 @@ class QueryBuilder {
     }
 
     /**
-     * Fetch ACLs from the driver
+     * Get the rule
+     *
+     * @return string
+     */
+    public function getRule() {
+        return $this->rule;
+    }
+
+    /**
+     * Fetch rules using a driver
+     *
+     * @param PHSA\Database\DriverInterface $driver
      *
      * @return PHSA\Acl\Ruleset
      */
-    public function getAcls() {
-        return $this->driver->getAcls($this->repositories, $this->users, $this->groups, $this->role, $this->rule);
+    public function getRules(DriverInterface $driver) {
+        return $driver->getRules($this);
+    }
+
+    /**
+     * Remove rules using a driver
+     *
+     * @param PHSA\Database\DriverInterface $driver
+     *
+     * @return boolean
+     */
+    public function removeRules(DriverInterface $driver) {
+        return $driver->removeRules($this);
     }
 }
