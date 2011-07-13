@@ -1,6 +1,7 @@
 <?php
 namespace PHSA\Database\Driver;
 
+use PHSA\Database\Query;
 use PHSA\Database\DriverInterface;
 
 class MySQLIntegrationTest extends \PHPUnit_Framework_TestCase {
@@ -47,5 +48,89 @@ class MySQLIntegrationTest extends \PHPUnit_Framework_TestCase {
             // Destroy the driver
             $this->driver = null;
         }
+    }
+
+    public function testGetAllRules() {
+        $ruleset = $this->driver->getAllRules();
+        $this->assertSame(6, count($ruleset));
+    }
+
+    public function testGetRulesWithQuery() {
+        $query = new Query();
+        $query->setUsers(array('christer', 'ay'));
+        $ruleset = $this->driver->getRules($query);
+        $this->assertSame(2, count($ruleset));
+
+        $query = new Query();
+        $query->setRepositories(array('repos', 'repos1'));
+        $ruleset = $this->driver->getRules($query);
+        $this->assertSame(4, count($ruleset));
+
+        $query = new Query();
+        $query->setGroups(array('foobar', 'vgmobil'));
+        $ruleset = $this->driver->getRules($query);
+        $this->assertSame(2, count($ruleset));
+
+        $query = new Query();
+        $query->setRole(DriverInterface::ROLE_USER);
+        $ruleset = $this->driver->getRules($query);
+        $this->assertSame(3, count($ruleset));
+
+        $query = new Query();
+        $query->setRole(DriverInterface::ROLE_GROUP);
+        $ruleset = $this->driver->getRules($query);
+        $this->assertSame(3, count($ruleset));
+
+        $query = new Query();
+        $query->setRule(DriverInterface::RULE_ALLOW);
+        $ruleset = $this->driver->getRules($query);
+        $this->assertSame(4, count($ruleset));
+
+        $query = new Query();
+        $query->setRule(DriverInterface::RULE_DENY);
+        $ruleset = $this->driver->getRules($query);
+        $this->assertSame(2, count($ruleset));
+    }
+
+    public function testAllowUser() {
+        $this->assertTrue($this->driver->allowUser('someuser', 'somerepos'));
+        $query = new Query();
+        $query->setUsers(array('someuser'))->setRepositories(array('somerepos'))->setRule(DriverInterface::RULE_ALLOW)->setRole(DriverInterface::ROLE_USER);
+        $ruleset = $this->driver->getRules($query);
+        $this->assertSame(1, count($ruleset));
+    }
+
+    public function testDenyUser() {
+        $this->assertTrue($this->driver->denyUser('someuser', 'somerepos'));
+        $query = new Query();
+        $query->setUsers(array('someuser'))->setRepositories(array('somerepos'))->setRule(DriverInterface::RULE_DENY)->setRole(DriverInterface::ROLE_USER);
+        $ruleset = $this->driver->getRules($query);
+        $this->assertSame(1, count($ruleset));
+    }
+
+    public function testAllowGroup() {
+        $this->assertTrue($this->driver->allowGroup('somegroup', 'somerepos'));
+        $query = new Query();
+        $query->setGroups(array('somegroup'))->setRepositories(array('somerepos'))->setRule(DriverInterface::RULE_ALLOW)->setRole(DriverInterface::ROLE_GROUP);
+        $ruleset = $this->driver->getRules($query);
+        $this->assertSame(1, count($ruleset));
+    }
+
+    public function testDenyGroup() {
+        $this->assertTrue($this->driver->denyGroup('somegroup', 'somerepos'));
+        $query = new Query();
+        $query->setGroups(array('somegroup'))->setRepositories(array('somerepos'))->setRule(DriverInterface::RULE_DENY)->setRole(DriverInterface::ROLE_GROUP);
+        $ruleset = $this->driver->getRules($query);
+        $this->assertSame(1, count($ruleset));
+    }
+
+    public function testRemoveRules() {
+        $query = new Query();
+        $query->setUsers(array('christer', 'andrer'));
+        $this->assertSame(2, $this->driver->removeRules($query));
+    }
+
+    public function testRemoveAllRules() {
+        $this->assertSame(6, $this->driver->removeAllRules());
     }
 }
