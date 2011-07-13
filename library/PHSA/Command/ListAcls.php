@@ -1,6 +1,7 @@
 <?php
 namespace PHSA\Command;
 
+use PHSA\Database\Query;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -55,13 +56,18 @@ class ListAcls extends BaseCommand {
             $rule = null;
         }
 
-        $acls = $driver->getAcls($repositories, $users, $groups, $role, $rule);
+        $query = new Query();
+        $ruleset = $query->setRepositories($repositories)
+                         ->setUsers($users)
+                         ->setGroups($groups)
+                         ->setRole($role)
+                         ->setRule($rule)
+                         ->getRules($driver);
 
-        if (count($acls) === 0) {
+        if (count($ruleset) === 0) {
             $output->writeln('No rules matches your query. Broaden your search.');
         } else {
             $output->writeln(
-                str_pad('ID', 5) . '|' .
                 str_pad('Repos', 15, ' ', STR_PAD_BOTH) . '|' .
                 str_pad('User', 15, ' ', STR_PAD_BOTH) . '|' .
                 str_pad('Group', 15, ' ', STR_PAD_BOTH) . '|' .
@@ -70,9 +76,8 @@ class ListAcls extends BaseCommand {
             );
             $output->writeln(str_repeat('-', 80));
 
-            foreach ($acls as $rule) {
+            foreach ($ruleset as $rule) {
                 $output->writeln(
-                    str_pad($rule->id, 5) . '|' .
                     str_pad($rule->repos, 15, ' ', STR_PAD_BOTH) . '|' .
                     str_pad($rule->user ?: ' - ', 15, ' ', STR_PAD_BOTH) . '|' .
                     str_pad($rule->group ?: ' - ', 15, ' ', STR_PAD_BOTH) . '|' .

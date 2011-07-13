@@ -25,7 +25,7 @@ class Dump extends BaseCommand {
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
         $driver = $this->configuration['database']['driver'];
-        $rules = $driver->getAcls();
+        $rules = $driver->getAllRules();
 
         $document = new \DOMDocument('1.0', 'UTF-8');
         $document->formatOutput = true;
@@ -35,7 +35,6 @@ class Dump extends BaseCommand {
         foreach ($rules as $r) {
             $rule = $document->createElement('rule');
 
-            $rule->setAttribute('id',    $r->id);
             $rule->setAttribute('repos', $r->repos);
             $rule->setAttribute('user',  $r->user);
             $rule->setAttribute('group', $r->group);

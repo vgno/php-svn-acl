@@ -63,7 +63,6 @@ class Import extends BaseCommand {
         $skipped = 0;
 
         foreach ($elements as $element) {
-            $id    = $element->getAttribute('id');
             $repos = $element->getAttribute('repos');
             $user  = $element->getAttribute('user') ?: null;
             $group = $element->getAttribute('group') ?: null;
@@ -71,7 +70,7 @@ class Import extends BaseCommand {
             $path  = $element->nodeValue ?: null;
 
             if (empty($repos)) {
-                $output->writeln('Skipping rule with id ' . $id);
+                $output->writeln('Skipping rule');
                 $skipped++;
                 continue;
             }
