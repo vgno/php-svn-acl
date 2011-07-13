@@ -1,6 +1,8 @@
 <?php
 namespace PHSA\Command;
 
+use PHSA\Database\Query;
+use PHSA\Database\DriverInterface as Database;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -56,5 +58,40 @@ class BaseCommand extends Command {
         $config = require $configFile;
 
         $this->setConfiguration($config);
+    }
+
+    /**
+     * Create a PHSA\Database\Query instance based on input options
+     *
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     *
+     * @return PHSA\Database\Query
+     */
+    protected function createQueryFromInputOptions(InputInterface $input) {
+        $repositories = $input->getoption('repos');
+        $users        = $input->getoption('user');
+        $groups       = $input->getoption('group');
+        $role         = $input->getOption('role');
+        $rule         = $input->getOption('rule');
+
+        $repositories = empty($repositories) ? array() : array_map('trim', explode(',', $repositories));
+        $users        = empty($users) ? array() : array_map('trim', explode(',', $users));
+        $groups       = empty($groups) ? array() : array_map('trim', explode(',', $groups));
+
+        if ($role !== Database::ROLE_USER && $role !== Database::ROLE_GROUP) {
+            $role = null;
+        }
+
+        if ($rule !== Database::RULE_ALLOW && $rule !== Database::RULE_DENY) {
+            $rule = null;
+        }
+
+        $query = new Query();
+
+        return $query->setRepositories($repositories)
+                     ->setUsers($users)
+                     ->setGroups($groups)
+                     ->setRole($role)
+                     ->setRule($rule);
     }
 }
