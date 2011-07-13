@@ -1,14 +1,14 @@
 <?php
 namespace PHSA\Database\Driver;
 
-use PHSA\Database\Driver;
+use PHSA\Database\Query;
 use PHSA\Database\DriverInterface;
 use PHSA\Acl;
 
 /**
  * MySQL driver
  */
-class MySQL extends Driver implements DriverInterface {
+class MySQL implements DriverInterface {
     /**
      * PDO instance
      *
@@ -65,36 +65,96 @@ class MySQL extends Driver implements DriverInterface {
     }
 
     /**
-     * @see PHSA\Database\DriverInterface::getAcls()
+     * Get a rule based on a database row
+     *
+     * @param array $row
+     *
+     * @return PHSA\Acl\Rule
      */
-    public function getAcls(array $repositories = array(), array $users = array(), array $groups = array(), $role = null, $rule = null) {
+    private function getRuleFromDatabaseRow(array $row) {
+        $rule = new Acl\Rule();
+
+        $rule->user  = $row['username'];
+        $rule->group = $row['groupname'];
+        $rule->repos = $row['repository'];
+        $rule->path  = $row['path'];
+        $rule->rule  = $row['rule'];
+
+        return $rule;
+    }
+
+    /**
+     * Get a ruleset based on several database rows
+     *
+     * @param array $rows
+     *
+     * @return PHSA\Acl\Ruleset
+     */
+    private function getRulesetFromDatabaseRows(array $rows) {
+        $ruleset = new Acl\Ruleset();
+
+        foreach ($rows as $row) {
+            $rule = $this->getRuleFromDatabaseRow($row);
+            $ruleset->addRule($rule);
+        }
+
+        return $ruleset;
+    }
+
+    /**
+     * @see PHSA\Database\DriverInterface::getAllRules()
+     */
+    public function getAllRules() {
+        $sql = "
+            SELECT
+                *
+            FROM
+                rules
+            ORDER BY
+                repository,
+                username,
+                groupname,
+                path
+            ASC
+        ";
+        $stmt = $this->getDb()->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetchAll();
+
+        return $this->getRulesetFromDatabaseRows($rows);
+    }
+
+    /**
+     * @see PHSA\Database\DriverInterface::getRules()
+     */
+    public function getRules(Query $query) {
         $params = array();
         $whereClause = array();
 
-        if (!empty($repositories)) {
+        if ($repositories = $query->getRepositories()) {
             $whereClause[] = "repository IN " . self::getPlaceHolderExpression(count($repositories));
             $params = array_merge($params, $repositories);
         }
 
-        if (!empty($users)) {
+        if ($users = $query->getUsers()) {
             $whereClause[] = "username IN " . self::getPlaceHolderExpression(count($users));
             $params = array_merge($params, $users);
         }
 
-        if (!empty($groups)) {
+        if ($groups = $query->getGroups()) {
             $whereClause[] = "groupname IN " . self::getPlaceHolderExpression(count($groups));
             $params = array_merge($params, $groups);
         }
 
-        if ($role === DriverInterface::ROLE_USER) {
+        if ($query->getRole() === DriverInterface::ROLE_USER) {
             $whereClause[] = "groupname IS NULL";
-        } else if ($role === DriverInterface::ROLE_GROUP) {
+        } else if ($query->getRole() === DriverInterface::ROLE_GROUP) {
             $whereClause[] = "username IS NULL";
         }
 
-        if ($rule === DriverInterface::RULE_ALLOW || $rule === DriverInterface::RULE_DENY) {
+        if ($query->getRule() === DriverInterface::RULE_ALLOW || $query->getRule() === DriverInterface::RULE_DENY) {
             $whereClause[] = "rule = ?";
-            $params[] = $rule;
+            $params[] = $query->getRule();
         }
 
         // Build query
@@ -109,22 +169,8 @@ class MySQL extends Driver implements DriverInterface {
         $stmt->execute($params);
 
         $rows = $stmt->fetchAll();
-        $ruleset = new Acl\Ruleset();
 
-        foreach ($rows as $row) {
-            $rule = new Acl\Rule();
-
-            $rule->id    = $row['id'];
-            $rule->user  = $row['username'];
-            $rule->group = $row['groupname'];
-            $rule->repos = $row['repository'];
-            $rule->path  = $row['path'];
-            $rule->rule  = $row['rule'];
-
-            $ruleset->addRule($rule);
-        }
-
-        return $ruleset;
+        return $this->getRulesetFromDatabaseRows($rows);
     }
 
     /**
@@ -224,7 +270,14 @@ class MySQL extends Driver implements DriverInterface {
     /**
      * @see PHSA\Database\DriverInterface::removeRules()
      */
-    public function removeRules() {
+    public function removeRules(Query $query) {
+
+    }
+
+    /**
+     * @see PHSA\Database\DriverInterface::removeAllRules()
+     */
+    public function removeAllRules() {
         $sql = "DELETE FROM rules";
         $stmt = $this->getDb()->prepare($sql);
 
