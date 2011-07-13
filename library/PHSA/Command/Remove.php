@@ -25,7 +25,6 @@ class Remove extends BaseCommand {
         $this->addOption('group', null, InputOption::VALUE_OPTIONAL, 'Comma separated list of groups to remove rules from');
         $this->addOption('rule', null, InputOption::VALUE_OPTIONAL, 'Remove rules of this type. "allow" or "deny"');
         $this->addOption('role', null, InputOption::VALUE_OPTIONAL, 'Remove rules with this role. "user" or "group"');
-        $this->addOption('path', null, InputOption::VALUE_OPTIONAL, 'Comma separated list of paths to remove');
     }
 
     /**
@@ -42,16 +41,19 @@ class Remove extends BaseCommand {
             return;
         }
 
-        $database = $this->configuration['database']['driver'];
+        $databaseDriver = $this->configuration['database']['driver'];
 
         if ($input->getOption('all')) {
             $result = $dialog->askConfirmation($output, 'Are you REALLY sure you want to remove ALL rules? ', false);
 
             if ($result) {
-                $database->removeAllRules();
+                $databaseDriver->removeAllRules();
                 $output->writeln('All rules have been removed');
                 return;
             } else {
+                $query = $this->createQueryFromInputOptions($input);
+                $query->removeRules($databaseDriver);
+
                 $output->writeln('Command aborted');
                 return;
             }

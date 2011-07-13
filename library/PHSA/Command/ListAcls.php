@@ -1,7 +1,6 @@
 <?php
 namespace PHSA\Command;
 
-use PHSA\Database\Query;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -38,31 +37,8 @@ class ListAcls extends BaseCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
         $driver = $this->configuration['database']['driver'];
 
-        $repositories = $input->getoption('repos');
-        $users        = $input->getoption('user');
-        $groups       = $input->getoption('group');
-        $role         = $input->getOption('role');
-        $rule         = $input->getOption('rule');
-
-        $repositories = empty($repositories) ? array() : array_map('trim', explode(',', $repositories));
-        $users        = empty($users) ? array() : array_map('trim', explode(',', $users));
-        $groups       = empty($groups) ? array() : array_map('trim', explode(',', $groups));
-
-        if ($role !== 'user' && $role !== 'group') {
-            $role = null;
-        }
-
-        if ($rule !== 'allow' && $rule !== 'deny') {
-            $rule = null;
-        }
-
-        $query = new Query();
-        $ruleset = $query->setRepositories($repositories)
-                         ->setUsers($users)
-                         ->setGroups($groups)
-                         ->setRole($role)
-                         ->setRule($rule)
-                         ->getRules($driver);
+        $query = $this->createQueryFromInputOptions($input);
+        $ruleset = $query->getRules($driver);
 
         if (count($ruleset) === 0) {
             $output->writeln('No rules matches your query. Broaden your search.');
