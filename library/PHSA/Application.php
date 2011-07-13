@@ -16,8 +16,8 @@ class Application extends Console\Application {
 
         // Register commands
         $this->addCommands(array(
-            new Command\ListReposes(),
-            new Command\ListAcls(),
+            new Command\Reposes(),
+            new Command\Rules(),
             new Command\AllowUser(),
             new Command\AllowGroup(),
             new Command\DenyUser(),

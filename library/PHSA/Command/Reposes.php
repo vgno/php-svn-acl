@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Command used to list the repositories in the svnParentDir directory specified in the
  * configuration
  */
-class ListReposes extends BaseCommand {
+class Reposes extends BaseCommand {
     /**
      * Class constructor
      */

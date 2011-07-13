@@ -6,16 +6,16 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command used to list the ACLs stored in the database
+ * Command used to list the rules stored in the database
  */
-class ListAcls extends BaseCommand {
+class Rules extends BaseCommand {
     /**
      * Class constructor
      */
     public function __construct() {
         parent::__construct('rules');
         $this->setDescription('List stored rules');
-        $this->setHelp('Display all ACLs stored in the database');
+        $this->setHelp('Display all rules stored in the database');
 
         $this->addOption('repos', null, InputOption::VALUE_OPTIONAL,
                          'Comma separated list of repositories to show rules from');
