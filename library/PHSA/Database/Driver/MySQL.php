@@ -282,8 +282,10 @@ class MySQL implements DriverInterface {
         $result = $stmt->execute($params);
 
         if (!$result) {
+            // @codeCoverageIgnoreStart
             return false;
         }
+        // @codeCoverageIgnoreEnd
 
         return $stmt->rowCount();
     }

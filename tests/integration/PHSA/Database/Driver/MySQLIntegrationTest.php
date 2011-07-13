@@ -133,4 +133,17 @@ class MySQLIntegrationTest extends \PHPUnit_Framework_TestCase {
     public function testRemoveAllRules() {
         $this->assertSame(6, $this->driver->removeAllRules());
     }
+
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testFailedConnection() {
+        $driver = new MySQL(array(
+            'hostname' => 'somebogushostname',
+            'database' => 'somedatabase',
+            'username' => 'foo',
+            'password' => 'bar',
+        ));
+        $db = $driver->getDb();
+    }
 }
