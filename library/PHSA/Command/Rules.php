@@ -6,7 +6,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command used to list the rules stored in the database
+ * Command used to list or delete rules
  */
 class Rules extends BaseCommand {
     /**
@@ -14,19 +14,15 @@ class Rules extends BaseCommand {
      */
     public function __construct() {
         parent::__construct('rules');
-        $this->setDescription('List stored rules');
-        $this->setHelp('Display all rules stored in the database');
+        $this->setDescription('List or delete stored rules');
+        $this->setHelp('Display or delete rules stored in the database');
 
-        $this->addOption('repos', null, InputOption::VALUE_OPTIONAL,
-                         'Comma separated list of repositories to show rules from');
-        $this->addOption('user', null, InputOption::VALUE_OPTIONAL,
-                         'Comma-separated list of usernames to show rules from');
-        $this->addOption('group', null, InputOption::VALUE_OPTIONAL,
-                         'Comma-separated list of groups to show rules from');
-        $this->addOption('role', null, InputOption::VALUE_OPTIONAL,
-                         'Show only rules with this rols. Values can be "user" or "group"');
-        $this->addOption('rule', null, InputOption::VALUE_OPTIONAL,
-                         'Show only rules of this type. Values can be "allow" or "deny"');
+        $this->addOption('repos', null, InputOption::VALUE_OPTIONAL, 'Comma separated list of repositories to show rules from');
+        $this->addOption('user', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of usernames to show rules from');
+        $this->addOption('group', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of groups to show rules from');
+        $this->addOption('role', null, InputOption::VALUE_OPTIONAL, 'Show only rules with this rols. Values can be "user" or "group"');
+        $this->addOption('rule', null, InputOption::VALUE_OPTIONAL, 'Show only rules of this type. Values can be "allow" or "deny"');
+        $this->addOption('delete', null, InputOption::VALUE_NONE, 'Set this option to delete the rules matching your query');
     }
 
     /**
@@ -41,25 +37,35 @@ class Rules extends BaseCommand {
         $ruleset = $query->getRules($driver);
 
         if (count($ruleset) === 0) {
-            $output->writeln('No rules matches your query. Broaden your search.');
+            $output->writeln('No rules matches your query');
         } else {
-            $output->writeln(
-                str_pad('Repos', 15, ' ', STR_PAD_BOTH) . '|' .
-                str_pad('User', 15, ' ', STR_PAD_BOTH) . '|' .
-                str_pad('Group', 15, ' ', STR_PAD_BOTH) . '|' .
-                str_pad('Path', 15, ' ', STR_PAD_BOTH) . '|' .
-                str_pad('Rule', 15, ' ', STR_PAD_BOTH)
-            );
-            $output->writeln(str_repeat('-', 80));
+            if ($input->getOption('delete')) {
+                $num = $driver->removeRules($query);
 
-            foreach ($ruleset as $rule) {
+                if ($num === false) {
+                    $output->writeln('An error occured. No rules have been deleted');
+                } else {
+                    $output->writeln($num . ' rule(s) deleted');
+                }
+            } else {
                 $output->writeln(
-                    str_pad($rule->repos, 15, ' ', STR_PAD_BOTH) . '|' .
-                    str_pad($rule->user ?: ' - ', 15, ' ', STR_PAD_BOTH) . '|' .
-                    str_pad($rule->group ?: ' - ', 15, ' ', STR_PAD_BOTH) . '|' .
-                    str_pad($rule->path ?: '<root>', 15, ' ', STR_PAD_BOTH) . '|' .
-                    str_pad($rule->rule, 15, ' ', STR_PAD_BOTH)
+                    str_pad('Repos', 15, ' ', STR_PAD_BOTH) . '|' .
+                    str_pad('User', 15, ' ', STR_PAD_BOTH) . '|' .
+                    str_pad('Group', 15, ' ', STR_PAD_BOTH) . '|' .
+                    str_pad('Path', 15, ' ', STR_PAD_BOTH) . '|' .
+                    str_pad('Rule', 15, ' ', STR_PAD_BOTH)
                 );
+                $output->writeln(str_repeat('-', 80));
+
+                foreach ($ruleset as $rule) {
+                    $output->writeln(
+                        str_pad($rule->repos, 15, ' ', STR_PAD_BOTH) . '|' .
+                        str_pad($rule->user ?: ' - ', 15, ' ', STR_PAD_BOTH) . '|' .
+                        str_pad($rule->group ?: ' - ', 15, ' ', STR_PAD_BOTH) . '|' .
+                        str_pad($rule->path ?: '<root>', 15, ' ', STR_PAD_BOTH) . '|' .
+                        str_pad($rule->rule, 15, ' ', STR_PAD_BOTH)
+                    );
+                }
             }
         }
     }

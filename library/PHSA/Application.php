@@ -24,7 +24,6 @@ class Application extends Console\Application {
             new Command\DenyGroup(),
             new Command\Dump(),
             new Command\Import(),
-            new Command\Remove(),
         ));
 
         // Add global options
