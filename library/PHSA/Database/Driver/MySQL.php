@@ -125,10 +125,14 @@ class MySQL implements DriverInterface {
     }
 
     /**
-     * @see PHSA\Database\DriverInterface::getRules()
+     * Build a where clause based on a query object
+     *
+     * @param PHSA\Datbase\Query $query
+     * @param array $params
+     *
+     * @return string
      */
-    public function getRules(Query $query) {
-        $params = array();
+    private function buildWhereClauseFromQuery(Query $query, array &$params) {
         $whereClause = array();
 
         if ($repositories = $query->getRepositories()) {
@@ -157,11 +161,21 @@ class MySQL implements DriverInterface {
             $params[] = $query->getRule();
         }
 
+        return implode(' AND ', $whereClause);
+    }
+
+    /**
+     * @see PHSA\Database\DriverInterface::getRules()
+     */
+    public function getRules(Query $query) {
+        $params = array();
+        $whereClause = $this->buildWhereClauseFromQuery($query, $params);
+
         // Build query
         $sql = "SELECT * FROM rules";
 
         if (!empty($whereClause)) {
-            $sql .= " WHERE " . implode(' AND ' , $whereClause);
+            $sql .= " WHERE " . $whereClause;
         }
 
         $sql .= " ORDER BY repository, username, groupname, path ASC";
@@ -271,17 +285,30 @@ class MySQL implements DriverInterface {
      * @see PHSA\Database\DriverInterface::removeRules()
      */
     public function removeRules(Query $query) {
+        $params = array();
+        $whereClause = $this->buildWhereClauseFromQuery($query, $params);
 
+        $sql = "DELETE FROM rules";
+
+        if (!empty($whereClause)) {
+            $sql .= " WHERE " . $whereClause;
+        }
+
+        $stmt = $this->getDb()->prepare($sql);
+        $result = $stmt->execute($params);
+
+        if (!$result) {
+            return false;
+        }
+
+        return $stmt->rowCount();
     }
 
     /**
      * @see PHSA\Database\DriverInterface::removeAllRules()
      */
     public function removeAllRules() {
-        $sql = "DELETE FROM rules";
-        $stmt = $this->getDb()->prepare($sql);
-
-        return (boolean) $stmt->execute();
+        return $this->removeRules(new Query());
     }
 
     /**

@@ -47,16 +47,29 @@ class Remove extends BaseCommand {
             $result = $dialog->askConfirmation($output, 'Are you REALLY sure you want to remove ALL rules? ', false);
 
             if ($result) {
-                $databaseDriver->removeAllRules();
-                $output->writeln('All rules have been removed');
-                return;
-            } else {
-                $query = $this->createQueryFromInputOptions($input);
-                $query->removeRules($databaseDriver);
+                $num = $databaseDriver->removeAllRules();
 
-                $output->writeln('Command aborted');
+                if ($num === false) {
+                    $output->writeln('An error occured. No rules have been removed');
+                } else {
+                    $output->writeln($num . ' rule' . ($num === 1 ? '' : 's') . ' removed');
+                }
+
                 return;
             }
+
+            $output->writeln('Command aborted');
+            return;
+        }
+
+        // Remove rules based on query
+        $query = $this->createQueryFromInputOptions($input);
+        $num = $query->removeRules($databaseDriver);
+
+        if ($num === false) {
+            $output->writeln('An error occured. No rules have been removed');
+        } else {
+            $output->writeln($num . ' rule' . ($num === 1 ? '' : 's') . ' removed');
         }
     }
 }

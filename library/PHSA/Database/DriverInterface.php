@@ -88,14 +88,14 @@ interface DriverInterface {
      *
      * @param PHSA\Database\Query $query
      *
-     * @return boolean True on success or false otherwise
+     * @return int|boolean Returns the number of removed rules on success or false on error
      */
     function removeRules(Query $query);
 
     /**
      * Remove all rules from the database
      *
-     * @return boolean True on success or false otherwise
+     * @return int|boolean Returns the number of removed rules on success or false on error
      */
     function removeAllRules();
 }
