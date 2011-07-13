@@ -15,14 +15,17 @@ class Application extends Console\Application {
         parent::__construct('PHSA', Version::getVersionNumber());
 
         // Register commands
-        $this->add(new Command\ListReposes());
-        $this->add(new Command\ListAcls());
-        $this->add(new Command\AllowUser());
-        $this->add(new Command\AllowGroup());
-        $this->add(new Command\DenyUser());
-        $this->add(new Command\DenyGroup());
-        $this->add(new Command\Dump());
-        $this->add(new Command\Import());
+        $this->addCommands(array(
+            new Command\ListReposes(),
+            new Command\ListAcls(),
+            new Command\AllowUser(),
+            new Command\AllowGroup(),
+            new Command\DenyUser(),
+            new Command\DenyGroup(),
+            new Command\Dump(),
+            new Command\Import(),
+            new Command\Remove(),
+        ));
 
         // Add global options
         $this->getDefinition()->addOption(
