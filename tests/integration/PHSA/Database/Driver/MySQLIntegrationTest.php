@@ -48,30 +48,4 @@ class MySQLIntegrationTest extends \PHPUnit_Framework_TestCase {
             $this->driver = null;
         }
     }
-
-    public function testGetAcls() {
-        $result = $this->driver->getAcls();
-        $this->assertSame(6, count($result));
-
-        $result = $this->driver->getAcls(array('repos1'));
-        $this->assertSame(3, count($result));
-
-        $result = $this->driver->getAcls(array(), array('christer', 'andrer'));
-        $this->assertSame(2, count($result));
-
-        $result = $this->driver->getAcls(array(), array(), array('vgdev', 'vgmobil'));
-        $this->assertSame(3, count($result));
-
-        $result = $this->driver->getAcls(array(), array(), array(), DriverInterface::ROLE_USER);
-        $this->assertSame(3, count($result));
-
-        $result = $this->driver->getAcls(array(), array(), array(), DriverInterface::ROLE_GROUP);
-        $this->assertSame(3, count($result));
-
-        $result = $this->driver->getAcls(array(), array(), array(), null, DriverInterface::RULE_ALLOW);
-        $this->assertSame(4, count($result));
-
-        $result = $this->driver->getAcls(array(), array(), array(), null, DriverInterface::RULE_DENY);
-        $this->assertSame(2, count($result));
-    }
 }

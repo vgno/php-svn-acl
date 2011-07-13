@@ -1,33 +1,29 @@
 <?php
 namespace PHSA\Database;
 
-class QueryBuilderTest extends \PHPUnit_Framework_TestCase {
-    private $queryBuilder;
-    private $driver;
+class QueryTest extends \PHPUnit_Framework_TestCase {
+    private $query;
 
     public function setUp() {
-        $this->driver = $this->getMock('PHSA\Database\DriverInterface');
-        $this->queryBuilder = new QueryBuilder($this->driver);
+        $this->query = new Query();
     }
 
     public function tearDown() {
-        $this->driver = null;
-        $this->queryBuilder = null;
+        $this->query = null;
     }
 
-    public function testQueryBuilder() {
+    public function testQuery() {
         $ruleset = $this->getMock('PHSA\Acl\Ruleset');
 
-        $this->driver->expects($this->once())->method('getAcls')->with(
-            array('repos1'), array('christer'), array('vgdev'), 'user', 'allow'
-        )->will($this->returnValue($ruleset));
+        $driver = $this->getMock('PHSA\Database\DriverInterface');
+        $driver->expects($this->once())->method('getRules')->with($this->query)->will($this->returnValue($ruleset));
 
-        $result = $this->queryBuilder->setRepositories(array('repos1'))
-                                     ->setUsers(array('christer'))
-                                     ->setGroups(array('vgdev'))
-                                     ->setRole(DriverInterface::ROLE_USER)
-                                     ->setRule(DriverInterface::RULE_ALLOW)
-                                     ->getAcls();
+        $result = $this->query->setRepositories(array('repos1'))
+                              ->setUsers(array('christer'))
+                              ->setGroups(array('vgdev'))
+                              ->setRole(DriverInterface::ROLE_USER)
+                              ->setRule(DriverInterface::RULE_ALLOW)
+                              ->getRules($driver);
 
         $this->assertSame($result, $ruleset);
     }
