@@ -24,17 +24,20 @@ interface DriverInterface {
     /**#@-*/
 
     /**
-     * Get ACLs based on the arguments
+     * Get rules based on a query instance
      *
-     * @param string[] $repositories Only include ACLs from these repositories
-     * @param string[] $users Only include ACLs from these users
-     * @param string[] $groups Only include ACLs from these groups
-     * @param string $role Only include ACLs in this role ("user" or "group")
-     * @param string $rule Only include ACLs with this rule ("allow" or "deny")
+     * @param PHSA\Database\Query $query
      *
      * @return PHSA\Acl\Ruleset
      */
-    function getAcls(array $repositories = array(), array $users = array(), array $groups = array(), $role = null, $rule = null);
+    function getRules(Query $query);
+
+    /**
+     * Get all rules from the database
+     *
+     * @return PHSA\Acl\Ruleset
+     */
+    function getAllRules();
 
     /**
      * Allow a user access to a repository
@@ -81,9 +84,18 @@ interface DriverInterface {
     function denyGroup($group, $repository, $path = null);
 
     /**
+     * Remove rules from the database
+     *
+     * @param PHSA\Database\Query $query
+     *
+     * @return boolean True on success or false otherwise
+     */
+    function removeRules(Query $query);
+
+    /**
      * Remove all rules from the database
      *
      * @return boolean True on success or false otherwise
      */
-    function removeRules();
+    function removeAllRules();
 }
