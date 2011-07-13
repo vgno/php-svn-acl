@@ -105,23 +105,7 @@ class MySQL implements DriverInterface {
      * @see PHSA\Database\DriverInterface::getAllRules()
      */
     public function getAllRules() {
-        $sql = "
-            SELECT
-                *
-            FROM
-                rules
-            ORDER BY
-                repository,
-                username,
-                groupname,
-                path
-            ASC
-        ";
-        $stmt = $this->getDb()->prepare($sql);
-        $stmt->execute();
-        $rows = $stmt->fetchAll();
-
-        return $this->getRulesetFromDatabaseRows($rows);
+        return $this->getRules(new Query());
     }
 
     /**
