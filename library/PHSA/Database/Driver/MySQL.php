@@ -161,7 +161,7 @@ class MySQL implements DriverInterface {
         $sql = "SELECT * FROM rules";
 
         if (!empty($whereClause)) {
-            $sql .= " WHERE " . implode(' AND ' , $whereClause);
+            $sql .= " WHERE " . implode(' OR ' , $whereClause);
         }
 
         $sql .= " ORDER BY repository, username, groupname, path ASC";
