@@ -57,4 +57,22 @@ class Rule {
      * @var string
      */
     public $rule;
+
+    /**
+     * See if the rule is a user rule
+     *
+     * @return boolean
+     */
+    public function isUserRule() {
+        return empty($this->group) && !empty($this->user);
+    }
+
+    /**
+     * See if the rule is a group rule
+     *
+     * @return boolean
+     */
+    public function isGroupRule() {
+        return empty($this->user) && !empty($this->group);
+    }
 }
