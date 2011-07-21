@@ -5,24 +5,6 @@ namespace PHSA\Database;
  * Interface for database drivers
  */
 interface DriverInterface {
-    /**#@+
-     * Roles
-     *
-     * @var string
-     */
-    const ROLE_USER  = 'user';
-    const ROLE_GROUP = 'group';
-    /**#@-*/
-
-    /**#@+
-     * Rules
-     *
-     * @var string
-     */
-    const RULE_ALLOW = 'allow';
-    const RULE_DENY  = 'deny';
-    /**#@-*/
-
     /**
      * Get rules based on a query instance
      *

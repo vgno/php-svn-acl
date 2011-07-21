@@ -1,7 +1,7 @@
 <?php
 namespace PHSA\Command;
 
-use PHSA\Database\DriverInterface as Database;
+use PHSA\Acl\Rule;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
@@ -76,18 +76,18 @@ class Import extends BaseCommand {
             }
 
             if (empty($user) && !empty($group)) {
-                if ($rule === Database::RULE_ALLOW) {
+                if ($rule === Rule::ALLOW) {
                     $database->allowGroup($group, $repos, $path);
                     $added++;
-                } else if ($rule === Database::RULE_DENY) {
+                } else if ($rule === Rule::DENY) {
                     $database->denyGroup($group, $repos, $path);
                     $added++;
                 }
             } else if (empty($group) && !empty($user)) {
-                if ($rule === Database::RULE_ALLOW) {
+                if ($rule === Rule::ALLOW) {
                     $database->allowUser($user, $repos, $path);
                     $added++;
-                } else if ($rule === Database::RULE_DENY) {
+                } else if ($rule === Rule::DENY) {
                     $database->denyUser($user, $repos, $path);
                     $added++;
                 }

@@ -134,13 +134,13 @@ class MySQL implements DriverInterface {
             $params = array_merge($params, $groups);
         }
 
-        if ($query->getRole() === DriverInterface::ROLE_USER) {
+        if ($query->getRole() === Acl\Rule::USER) {
             $whereClause[] = "groupname IS NULL";
-        } else if ($query->getRole() === DriverInterface::ROLE_GROUP) {
+        } else if ($query->getRole() === Acl\Rule::GROUP) {
             $whereClause[] = "username IS NULL";
         }
 
-        if ($query->getRule() === DriverInterface::RULE_ALLOW || $query->getRule() === DriverInterface::RULE_DENY) {
+        if ($query->getRule() === Acl\Rule::ALLOW || $query->getRule() === Acl\Rule::DENY) {
             $whereClause[] = "rule = ?";
             $params[] = $query->getRule();
         }
@@ -191,14 +191,14 @@ class MySQL implements DriverInterface {
      * @see PHSA\Database\DriverInterface::allowUser()
      */
     public function allowUser($user, $repository, $path = null) {
-        return $this->addUserRule($user, $repository, $path, DriverInterface::RULE_ALLOW);
+        return $this->addUserRule($user, $repository, $path, Acl\Rule::ALLOW);
     }
 
     /**
      * @see PHSA\Database\DriverInterface::allowUser()
      */
     public function denyUser($user, $repository, $path = null) {
-        return $this->addUserRule($user, $repository, $path, DriverInterface::RULE_DENY);
+        return $this->addUserRule($user, $repository, $path, Acl\Rule::DENY);
     }
 
     /**
@@ -219,14 +219,14 @@ class MySQL implements DriverInterface {
      * @see PHSA\Database\DriverInterface::allowGroup()
      */
     public function allowGroup($group, $repository, $path = null) {
-        return $this->addGroupRule($group, $repository, $path, DriverInterface::RULE_ALLOW);
+        return $this->addGroupRule($group, $repository, $path, Acl\Rule::ALLOW);
     }
 
     /**
      * @see PHSA\Database\DriverInterface::allowUser()
      */
     public function denyGroup($group, $repository, $path = null) {
-        return $this->addGroupRule($group, $repository, $path, DriverInterface::RULE_DENY);
+        return $this->addGroupRule($group, $repository, $path, Acl\Rule::DENY);
     }
 
     /**

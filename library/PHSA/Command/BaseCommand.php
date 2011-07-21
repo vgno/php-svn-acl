@@ -1,8 +1,8 @@
 <?php
 namespace PHSA\Command;
 
+use PHSA\Acl\Rule;
 use PHSA\Database\Query;
-use PHSA\Database\DriverInterface as Database;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -78,11 +78,11 @@ class BaseCommand extends Command {
         $users        = empty($users) ? array() : array_map('trim', explode(',', $users));
         $groups       = empty($groups) ? array() : array_map('trim', explode(',', $groups));
 
-        if ($role !== Database::ROLE_USER && $role !== Database::ROLE_GROUP) {
+        if ($role !== Rule::USER && $role !== Rule::GROUP) {
             $role = null;
         }
 
-        if ($rule !== Database::RULE_ALLOW && $rule !== Database::RULE_DENY) {
+        if ($rule !== Rule::ALLOW && $rule !== Rule::DENY) {
             $rule = null;
         }
 

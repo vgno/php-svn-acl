@@ -6,6 +6,15 @@ namespace PHSA\Acl;
  */
 class Rule {
     /**#@+
+     * Roles
+     *
+     * @var string
+     */
+    const USER  = 'user';
+    const GROUP = 'group';
+    /**#@-*/
+
+    /**#@+
      * Rule
      *
      * @var string
