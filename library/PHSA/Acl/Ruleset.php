@@ -72,4 +72,38 @@ class Ruleset implements \Iterator, \Countable {
 
         return $this;
     }
+
+    /**
+     * Fetch rules in current set that relates to a user as a new ruleset
+     *
+     * @return PHSA\Acl\Ruleset
+     */
+    public function getUserRules() {
+        $ruleset = new Ruleset();
+
+        foreach ($this->rules as $rule) {
+            if ($rule->isUserRule()) {
+                $ruleset->addRule($rule);
+            }
+        }
+
+        return $ruleset;
+    }
+
+    /**
+     * Fetch rules in current set that relates to a group as a new ruleset
+     *
+     * @return PHSA\Acl\Ruleset
+     */
+    public function getGroupRules() {
+        $ruleset = new Ruleset();
+
+        foreach ($this->rules as $rule) {
+            if ($rule->isGroupRule()) {
+                $ruleset->addRule($rule);
+            }
+        }
+
+        return $ruleset;
+    }
 }
