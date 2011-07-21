@@ -6,6 +6,18 @@ namespace PHSA\Database;
  */
 interface DriverInterface {
     /**
+     * Fetch specific rules from the database
+     *
+     * @param string $repository The repository to fetch rules from
+     * @param string $username The username to fetch rules from
+     * @param string[] $groups Groups to fetch rules from
+     * @param string[] $topLevels The top levels in the changeset to fetch rules from
+     *
+     * @return PHSA\Acl\Ruleset
+     */
+    function getEffectiveRules($repository, $username, array $groups, array $topLevels);
+
+    /**
      * Get rules based on a query instance
      *
      * @param PHSA\Database\Query $query

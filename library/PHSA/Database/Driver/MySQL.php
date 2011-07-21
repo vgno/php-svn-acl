@@ -148,7 +148,7 @@ class MySQL implements DriverInterface {
         if ($paths = $query->getPaths()) {
             $where = '(';
 
-            for ($i = 0; $i < count($topLevels); $i++) {
+            foreach ($paths as $path) {
                 $where .= " (path = ? OR path LIKE ?) OR";
 
                 $params[] = $path;
@@ -161,7 +161,7 @@ class MySQL implements DriverInterface {
             $whereClause[] = $where;
         }
 
-        return implode(' AND ', $whereClause);
+        return implode(' ' . $query->getWhereCondition() . ' ', $whereClause);
     }
 
     /**
@@ -178,7 +178,8 @@ class MySQL implements DriverInterface {
             $sql .= " WHERE " . $whereClause;
         }
 
-        $sql .= " ORDER BY repository, username, groupname, path ASC";
+        $sql .= " ORDER BY path ASC";
+
         $stmt = $this->getDb()->prepare($sql);
         $stmt->execute($params);
 
@@ -321,5 +322,50 @@ class MySQL implements DriverInterface {
      */
     static public function getPlaceholderExpression($columns) {
         return '(' . substr(str_repeat('?, ', $columns), 0, -2) . ')';
+    }
+
+    /**
+     * @see PHSA\Database\DriverInterface::getEffectiveRules()
+     */
+    public function getEffectiveRules($repository, $username, array $groups, array $topLevels) {
+        // Parameters for the query
+        $params = $groups;
+        $params[] = $username;
+        $params[] = $repository;
+
+        // Build where clause
+        $whereClause = "(groupname IN " . $this->getPlaceHolderExpression(count($groups)) . " OR username = ?) AND
+                        repository = ? AND (";
+
+        foreach ($topLevels as $path) {
+            $whereClause .= " (path = ? OR path LIKE ?) OR";
+
+            $params[] = $path;
+            $params[] = $path . '/%';
+        }
+
+        $whereClause .= ' path IS NULL )';
+
+        $sql = "
+            SELECT
+                *
+            FROM
+                rules
+            WHERE
+                " . $whereClause . "
+            GROUP BY
+                username,
+                path,
+                rule
+            ORDER BY
+                path ASC
+        ";
+
+        $stmt = $this->getDb()->prepare($sql);
+
+        $stmt->execute($params);
+        $rows = $stmt->fetchAll();
+
+        return $this->getRulesetFromDatabaseRows($rows);
     }
 }
