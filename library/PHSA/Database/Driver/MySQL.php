@@ -145,6 +145,22 @@ class MySQL implements DriverInterface {
             $params[] = $query->getRule();
         }
 
+        if ($paths = $query->getPaths()) {
+            $where = '(';
+
+            for ($i = 0; $i < count($topLevels); $i++) {
+                $where .= " (path = ? OR path LIKE ?) OR";
+
+                $params[] = $path;
+                $params[] = $path . '/%';
+            }
+
+            // Add IS NULL to fetch top level rules
+            $where .= ' path IS NULL)';
+
+            $whereClause[] = $where;
+        }
+
         return implode(' AND ', $whereClause);
     }
 
