@@ -5,6 +5,22 @@ namespace PHSA\Database;
  * Query builder for the database drivers
  */
 class Query {
+    /**#@+
+     * Where condition
+     *
+     * @var string
+     */
+    const COND_AND = 'AND';
+    const COND_OR  = 'OR';
+    /**#@-*/
+
+    /**
+     * Where condition
+     *
+     * @var string
+     */
+    private $whereCondition = Query::COND_AND;
+
     /**
      * Repositories to fetch
      *
@@ -46,6 +62,28 @@ class Query {
      * @var string[]
      */
     private $paths = array();
+
+    /**
+     * Set the WHERE condition
+     *
+     * @param string $cond Query::AND or Query::OR
+     *
+     * @return PHSA\Database\Query
+     */
+    public function setWhereCondition($cond) {
+        $this->whereCondition = $cond;
+
+        return $this;
+    }
+
+    /**
+     * Get the where condition
+     *
+     * @return string
+     */
+    public function getWhereCondition() {
+        return $this->whereCondition;
+    }
 
     /**
      * Set the repositories to fetch from
