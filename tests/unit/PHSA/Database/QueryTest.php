@@ -1,6 +1,8 @@
 <?php
 namespace PHSA\Database;
 
+use PHSA\Acl\Rule;
+
 class QueryTest extends \PHPUnit_Framework_TestCase {
     private $query;
 
@@ -51,8 +53,8 @@ class QueryTest extends \PHPUnit_Framework_TestCase {
         $result = $this->query->setRepositories(array('repos1'))
                               ->setUsers(array('christer'))
                               ->setGroups(array('vgdev'))
-                              ->setRole(DriverInterface::ROLE_USER)
-                              ->setRule(DriverInterface::RULE_ALLOW)
+                              ->setRole(Query::USER)
+                              ->setRule(Rule::ALLOW)
                               ->getRules($driver);
 
         $this->assertSame($result, $ruleset);
@@ -67,8 +69,8 @@ class QueryTest extends \PHPUnit_Framework_TestCase {
         $result = $this->query->setRepositories(array('repos1'))
                               ->setUsers(array('christer'))
                               ->setGroups(array('vgdev'))
-                              ->setRole(DriverInterface::ROLE_USER)
-                              ->setRule(DriverInterface::RULE_ALLOW)
+                              ->setRole(Query::USER)
+                              ->setRule(Rule::ALLOW)
                               ->removeRules($driver);
 
         $this->assertSame($result, $ruleset);

@@ -74,11 +74,11 @@ class MySQL implements DriverInterface {
     private function getRuleFromDatabaseRow(array $row) {
         $rule = new Acl\Rule();
 
-        $rule->user  = $row['username'];
-        $rule->group = $row['groupname'];
-        $rule->repos = $row['repository'];
-        $rule->path  = $row['path'];
-        $rule->rule  = $row['rule'];
+        $rule->setUser($row['username'])
+             ->setGroup($row['groupname'])
+             ->setRepos($row['repository'])
+             ->setPath($row['path'])
+             ->setRule($row['rule']);
 
         return $rule;
     }
@@ -134,18 +134,34 @@ class MySQL implements DriverInterface {
             $params = array_merge($params, $groups);
         }
 
-        if ($query->getRole() === DriverInterface::ROLE_USER) {
+        if ($query->getRole() === Query::USER) {
             $whereClause[] = "groupname IS NULL";
-        } else if ($query->getRole() === DriverInterface::ROLE_GROUP) {
+        } else if ($query->getRole() === Query::GROUP) {
             $whereClause[] = "username IS NULL";
         }
 
-        if ($query->getRule() === DriverInterface::RULE_ALLOW || $query->getRule() === DriverInterface::RULE_DENY) {
+        if ($query->getRule() === Acl\Rule::ALLOW || $query->getRule() === Acl\Rule::DENY) {
             $whereClause[] = "rule = ?";
             $params[] = $query->getRule();
         }
 
-        return implode(' AND ', $whereClause);
+        if ($paths = $query->getPaths()) {
+            $where = '(';
+
+            foreach ($paths as $path) {
+                $where .= " (path = ? OR path LIKE ?) OR";
+
+                $params[] = $path;
+                $params[] = $path . '/%';
+            }
+
+            // Add IS NULL to fetch top level rules
+            $where .= ' path IS NULL)';
+
+            $whereClause[] = $where;
+        }
+
+        return implode(' ' . $query->getWhereCondition() . ' ', $whereClause);
     }
 
     /**
@@ -162,7 +178,8 @@ class MySQL implements DriverInterface {
             $sql .= " WHERE " . $whereClause;
         }
 
-        $sql .= " ORDER BY repository, username, groupname, path ASC";
+        $sql .= " ORDER BY path ASC";
+
         $stmt = $this->getDb()->prepare($sql);
         $stmt->execute($params);
 
@@ -175,14 +192,14 @@ class MySQL implements DriverInterface {
      * @see PHSA\Database\DriverInterface::allowUser()
      */
     public function allowUser($user, $repository, $path = null) {
-        return $this->addUserRule($user, $repository, $path, DriverInterface::RULE_ALLOW);
+        return $this->addUserRule($user, $repository, $path, Acl\Rule::ALLOW);
     }
 
     /**
      * @see PHSA\Database\DriverInterface::allowUser()
      */
     public function denyUser($user, $repository, $path = null) {
-        return $this->addUserRule($user, $repository, $path, DriverInterface::RULE_DENY);
+        return $this->addUserRule($user, $repository, $path, Acl\Rule::DENY);
     }
 
     /**
@@ -203,14 +220,14 @@ class MySQL implements DriverInterface {
      * @see PHSA\Database\DriverInterface::allowGroup()
      */
     public function allowGroup($group, $repository, $path = null) {
-        return $this->addGroupRule($group, $repository, $path, DriverInterface::RULE_ALLOW);
+        return $this->addGroupRule($group, $repository, $path, Acl\Rule::ALLOW);
     }
 
     /**
      * @see PHSA\Database\DriverInterface::allowUser()
      */
     public function denyGroup($group, $repository, $path = null) {
-        return $this->addGroupRule($group, $repository, $path, DriverInterface::RULE_DENY);
+        return $this->addGroupRule($group, $repository, $path, Acl\Rule::DENY);
     }
 
     /**
@@ -305,5 +322,50 @@ class MySQL implements DriverInterface {
      */
     static public function getPlaceholderExpression($columns) {
         return '(' . substr(str_repeat('?, ', $columns), 0, -2) . ')';
+    }
+
+    /**
+     * @see PHSA\Database\DriverInterface::getEffectiveRules()
+     */
+    public function getEffectiveRules($repository, $username, array $groups, array $topLevels) {
+        // Parameters for the query
+        $params = $groups;
+        $params[] = $username;
+        $params[] = $repository;
+
+        // Build where clause
+        $whereClause = "(groupname IN " . $this->getPlaceHolderExpression(count($groups)) . " OR username = ?) AND
+                        repository = ? AND (";
+
+        foreach ($topLevels as $path) {
+            $whereClause .= " (path = ? OR path LIKE ?) OR";
+
+            $params[] = $path;
+            $params[] = $path . '/%';
+        }
+
+        $whereClause .= ' path IS NULL )';
+
+        $sql = "
+            SELECT
+                *
+            FROM
+                rules
+            WHERE
+                " . $whereClause . "
+            GROUP BY
+                username,
+                path,
+                rule
+            ORDER BY
+                path ASC
+        ";
+
+        $stmt = $this->getDb()->prepare($sql);
+
+        $stmt->execute($params);
+        $rows = $stmt->fetchAll();
+
+        return $this->getRulesetFromDatabaseRows($rows);
     }
 }

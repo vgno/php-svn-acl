@@ -5,23 +5,17 @@ namespace PHSA\Database;
  * Interface for database drivers
  */
 interface DriverInterface {
-    /**#@+
-     * Roles
+    /**
+     * Fetch specific rules from the database
      *
-     * @var string
-     */
-    const ROLE_USER  = 'user';
-    const ROLE_GROUP = 'group';
-    /**#@-*/
-
-    /**#@+
-     * Rules
+     * @param string $repository The repository to fetch rules from
+     * @param string $username The username to fetch rules from
+     * @param string[] $groups Groups to fetch rules from
+     * @param string[] $topLevels The top levels in the changeset to fetch rules from
      *
-     * @var string
+     * @return PHSA\Acl\Ruleset
      */
-    const RULE_ALLOW = 'allow';
-    const RULE_DENY  = 'deny';
-    /**#@-*/
+    function getEffectiveRules($repository, $username, array $groups, array $topLevels);
 
     /**
      * Get rules based on a query instance

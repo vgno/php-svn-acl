@@ -5,6 +5,31 @@ namespace PHSA\Database;
  * Query builder for the database drivers
  */
 class Query {
+    /**#@+
+     * Roles
+     *
+     * @var string
+     */
+    const USER  = 'user';
+    const GROUP = 'group';
+    /**#@-*/
+
+    /**#@+
+     * Where condition
+     *
+     * @var string
+     */
+    const COND_AND = 'AND';
+    const COND_OR  = 'OR';
+    /**#@-*/
+
+    /**
+     * Where condition
+     *
+     * @var string
+     */
+    private $whereCondition = Query::COND_AND;
+
     /**
      * Repositories to fetch
      *
@@ -41,9 +66,39 @@ class Query {
     private $rule;
 
     /**
-     * Set the repositories to fetch from
+     * Paths to fetch
      *
      * @var string[]
+     */
+    private $paths = array();
+
+    /**
+     * Set the WHERE condition
+     *
+     * @param string $cond Query::AND or Query::OR
+     *
+     * @return PHSA\Database\Query
+     */
+    public function setWhereCondition($cond) {
+        $this->whereCondition = $cond;
+
+        return $this;
+    }
+
+    /**
+     * Get the where condition
+     *
+     * @return string
+     */
+    public function getWhereCondition() {
+        return $this->whereCondition;
+    }
+
+    /**
+     * Set the repositories to fetch from
+     *
+     * @param string[] $repositories
+     *
      * @return PHSA\Database\Query
      */
     public function setRepositories(array $repositories) {
@@ -64,7 +119,8 @@ class Query {
     /**
      * Set the users to fetch from
      *
-     * @var string[]
+     * @param string[] $users
+     *
      * @return PHSA\Database\Query
      */
     public function setUsers(array $users) {
@@ -85,7 +141,8 @@ class Query {
     /**
      * Set the groups to fetch from
      *
-     * @var string[]
+     * @param string[] $groups
+     *
      * @return PHSA\Database\Query
      */
     public function setGroups(array $groups) {
@@ -97,7 +154,7 @@ class Query {
     /**
      * Get groups
      *
-     * @var string[]
+     * @return string[]
      */
     public function getGroups() {
         return $this->groups;
@@ -106,7 +163,8 @@ class Query {
     /**
      * Set the role to fetch
      *
-     * @var string
+     * @param string $role
+     *
      * @return PHSA\Database\Query
      */
     public function setRole($role) {
@@ -127,7 +185,8 @@ class Query {
     /**
      * Set the rule to fetch
      *
-     * @var string
+     * @param string $rule
+     *
      * @return PHSA\Database\Query
      */
     public function setRule($rule) {
@@ -143,6 +202,28 @@ class Query {
      */
     public function getRule() {
         return $this->rule;
+    }
+
+    /**
+     * Set the paths
+     *
+     * @param string[] $paths
+     *
+     * @return PHSA\Database\Query
+     */
+    public function setPaths(array $paths) {
+        $this->paths = $paths;
+
+        return $this;
+    }
+
+    /**
+     * Get paths
+     *
+     * @return string[]
+     */
+    public function getPaths() {
+        return $this->paths;
     }
 
     /**

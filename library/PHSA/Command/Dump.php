@@ -35,15 +35,16 @@ class Dump extends BaseCommand {
         foreach ($rules as $r) {
             $rule = $document->createElement('rule');
 
-            $rule->setAttribute('repos', $r->repos);
-            $rule->setAttribute('user',  $r->user);
-            $rule->setAttribute('group', $r->group);
-            $rule->setAttribute('user',  $r->user);
-            $rule->setAttribute('rule',  $r->rule);
+            $rule->setAttribute('repos', $r->getRepos());
+            $rule->setAttribute('user',  $r->getUser());
+            $rule->setAttribute('group', $r->getGroup());
+            $rule->setAttribute('rule',  $r->getRule());
 
-            if (!empty($r->path)) {
-                $path = $document->createTextNode($r->path);
-                $rule->appendChild($path);
+            $path = ltrim($r->getPath(), '/');
+
+            if (!empty($path)) {
+                $pathNode = $document->createTextNode($path);
+                $rule->appendChild($pathNode);
             }
 
             $ruleset->appendChild($rule);
