@@ -20,7 +20,7 @@ class Rules extends BaseCommand {
         $this->addOption('repos', null, InputOption::VALUE_OPTIONAL, 'Comma separated list of repositories to show rules from');
         $this->addOption('user', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of usernames to show rules from');
         $this->addOption('group', null, InputOption::VALUE_OPTIONAL, 'Comma-separated list of groups to show rules from');
-        $this->addOption('role', null, InputOption::VALUE_OPTIONAL, 'Show only rules with this rols. Values can be "user" or "group"');
+        $this->addOption('role', null, InputOption::VALUE_OPTIONAL, 'Show only rules with this role. Values can be "user" or "group"');
         $this->addOption('rule', null, InputOption::VALUE_OPTIONAL, 'Show only rules of this type. Values can be "allow" or "deny"');
         $this->addOption('delete', null, InputOption::VALUE_NONE, 'Set this option to delete the rules matching your query');
     }
@@ -59,11 +59,11 @@ class Rules extends BaseCommand {
 
                 foreach ($ruleset as $rule) {
                     $output->writeln(
-                        str_pad($rule->repos, 15, ' ', STR_PAD_BOTH) . '|' .
-                        str_pad($rule->user ?: ' - ', 15, ' ', STR_PAD_BOTH) . '|' .
-                        str_pad($rule->group ?: ' - ', 15, ' ', STR_PAD_BOTH) . '|' .
-                        str_pad($rule->path ?: '<root>', 15, ' ', STR_PAD_BOTH) . '|' .
-                        str_pad($rule->rule, 15, ' ', STR_PAD_BOTH)
+                        str_pad($rule->getRepos(), 15, ' ', STR_PAD_BOTH) . '|' .
+                        str_pad($rule->getUser() ?: ' - ', 15, ' ', STR_PAD_BOTH) . '|' .
+                        str_pad($rule->getGroup() ?: ' - ', 15, ' ', STR_PAD_BOTH) . '|' .
+                        str_pad($rule->getPath(), 15, ' ', STR_PAD_BOTH) . '|' .
+                        str_pad($rule->getRule(), 15, ' ', STR_PAD_BOTH)
                     );
                 }
             }
