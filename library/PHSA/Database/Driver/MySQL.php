@@ -74,11 +74,11 @@ class MySQL implements DriverInterface {
     private function getRuleFromDatabaseRow(array $row) {
         $rule = new Acl\Rule();
 
-        $rule->user  = $row['username'];
-        $rule->group = $row['groupname'];
-        $rule->repos = $row['repository'];
-        $rule->path  = $row['path'];
-        $rule->rule  = $row['rule'];
+        $rule->setUser($row['username'])
+             ->setGroup($row['groupname'])
+             ->setRepos($row['repository'])
+             ->setPath($row['path'])
+             ->setRule($row['rule']);
 
         return $rule;
     }
@@ -134,9 +134,9 @@ class MySQL implements DriverInterface {
             $params = array_merge($params, $groups);
         }
 
-        if ($query->getRole() === Acl\Rule::USER) {
+        if ($query->getRole() === Query::USER) {
             $whereClause[] = "groupname IS NULL";
-        } else if ($query->getRole() === Acl\Rule::GROUP) {
+        } else if ($query->getRole() === Query::GROUP) {
             $whereClause[] = "username IS NULL";
         }
 
