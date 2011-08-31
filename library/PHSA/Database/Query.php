@@ -6,6 +6,15 @@ namespace PHSA\Database;
  */
 class Query {
     /**#@+
+     * Roles
+     *
+     * @var string
+     */
+    const USER  = 'user';
+    const GROUP = 'group';
+    /**#@-*/
+
+    /**#@+
      * Where condition
      *
      * @var string
