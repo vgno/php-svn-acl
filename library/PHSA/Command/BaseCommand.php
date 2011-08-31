@@ -78,7 +78,7 @@ class BaseCommand extends Command {
         $users        = empty($users) ? array() : array_map('trim', explode(',', $users));
         $groups       = empty($groups) ? array() : array_map('trim', explode(',', $groups));
 
-        if ($role !== Rule::USER && $role !== Rule::GROUP) {
+        if ($role !== Query::USER && $role !== Query::GROUP) {
             $role = null;
         }
 
