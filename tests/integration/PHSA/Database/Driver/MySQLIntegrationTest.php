@@ -73,12 +73,12 @@ class MySQLIntegrationTest extends \PHPUnit_Framework_TestCase {
         $this->assertSame(2, count($ruleset));
 
         $query = new Query();
-        $query->setRole(Rule::USER);
+        $query->setRole(Query::USER);
         $ruleset = $this->driver->getRules($query);
         $this->assertSame(3, count($ruleset));
 
         $query = new Query();
-        $query->setRole(Rule::GROUP);
+        $query->setRole(Query::GROUP);
         $ruleset = $this->driver->getRules($query);
         $this->assertSame(3, count($ruleset));
 
@@ -96,7 +96,7 @@ class MySQLIntegrationTest extends \PHPUnit_Framework_TestCase {
     public function testAllowUser() {
         $this->assertTrue($this->driver->allowUser('someuser', 'somerepos'));
         $query = new Query();
-        $query->setUsers(array('someuser'))->setRepositories(array('somerepos'))->setRule(Rule::ALLOW)->setRole(Rule::USER);
+        $query->setUsers(array('someuser'))->setRepositories(array('somerepos'))->setRule(Rule::ALLOW)->setRole(Query::USER);
         $ruleset = $this->driver->getRules($query);
         $this->assertSame(1, count($ruleset));
     }
@@ -104,7 +104,7 @@ class MySQLIntegrationTest extends \PHPUnit_Framework_TestCase {
     public function testDenyUser() {
         $this->assertTrue($this->driver->denyUser('someuser', 'somerepos'));
         $query = new Query();
-        $query->setUsers(array('someuser'))->setRepositories(array('somerepos'))->setRule(Rule::DENY)->setRole(Rule::USER);
+        $query->setUsers(array('someuser'))->setRepositories(array('somerepos'))->setRule(Rule::DENY)->setRole(Query::USER);
         $ruleset = $this->driver->getRules($query);
         $this->assertSame(1, count($ruleset));
     }
@@ -112,7 +112,7 @@ class MySQLIntegrationTest extends \PHPUnit_Framework_TestCase {
     public function testAllowGroup() {
         $this->assertTrue($this->driver->allowGroup('somegroup', 'somerepos'));
         $query = new Query();
-        $query->setGroups(array('somegroup'))->setRepositories(array('somerepos'))->setRule(Rule::ALLOW)->setRole(Rule::GROUP);
+        $query->setGroups(array('somegroup'))->setRepositories(array('somerepos'))->setRule(Rule::ALLOW)->setRole(Query::GROUP);
         $ruleset = $this->driver->getRules($query);
         $this->assertSame(1, count($ruleset));
     }
@@ -120,7 +120,7 @@ class MySQLIntegrationTest extends \PHPUnit_Framework_TestCase {
     public function testDenyGroup() {
         $this->assertTrue($this->driver->denyGroup('somegroup', 'somerepos'));
         $query = new Query();
-        $query->setGroups(array('somegroup'))->setRepositories(array('somerepos'))->setRule(Rule::DENY)->setRole(Rule::GROUP);
+        $query->setGroups(array('somegroup'))->setRepositories(array('somerepos'))->setRule(Rule::DENY)->setRole(Query::GROUP);
         $ruleset = $this->driver->getRules($query);
         $this->assertSame(1, count($ruleset));
     }

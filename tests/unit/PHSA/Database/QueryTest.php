@@ -53,7 +53,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase {
         $result = $this->query->setRepositories(array('repos1'))
                               ->setUsers(array('christer'))
                               ->setGroups(array('vgdev'))
-                              ->setRole(Rule::USER)
+                              ->setRole(Query::USER)
                               ->setRule(Rule::ALLOW)
                               ->getRules($driver);
 
@@ -69,7 +69,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase {
         $result = $this->query->setRepositories(array('repos1'))
                               ->setUsers(array('christer'))
                               ->setGroups(array('vgdev'))
-                              ->setRole(Rule::USER)
+                              ->setRole(Query::USER)
                               ->setRule(Rule::ALLOW)
                               ->removeRules($driver);
 
