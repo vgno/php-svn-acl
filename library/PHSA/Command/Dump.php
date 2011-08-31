@@ -40,9 +40,11 @@ class Dump extends BaseCommand {
             $rule->setAttribute('group', $r->getGroup());
             $rule->setAttribute('rule',  $r->getRule());
 
-            if (!empty($r->path)) {
-                $path = $document->createTextNode($r->path);
-                $rule->appendChild($path);
+            $path = ltrim($r->getPath(), '/');
+
+            if (!empty($path)) {
+                $pathNode = $document->createTextNode($path);
+                $rule->appendChild($pathNode);
             }
 
             $ruleset->appendChild($rule);
