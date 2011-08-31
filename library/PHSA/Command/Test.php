@@ -62,12 +62,12 @@ class Test extends BaseCommand {
         $groupRules = array();
 
         foreach ($rules as $rule) {
-            $result = ($rule->rule === Rule::ALLOW);
+            $result = $rule->ruleAllows();
 
             if ($rule->isUserRule()) {
-                $userRules[$rule->path ?: '/'] = $result;
+                $userRules[$rule->getPath()] = $result;
             } else {
-                $groupRules[$rule->path ?: '/'] = $result;
+                $groupRules[$rule->getPath()] = $result;
             }
         }
 
@@ -90,12 +90,12 @@ class Test extends BaseCommand {
             ), true);
 
             foreach ($rules as $rule) {
-                $tag = ($rule->rule === Rule::ALLOW) ? 'info' : 'error';
+                $tag = $rule->ruleAllows() ? 'info' : 'error';
 
                 if ($rule->isUserRule()) {
-                    $output->writeln('<' . $tag . '>User: ' . $rule->user . ', path: ' . ($rule->path ?: '/') . '</' . $tag . '>');
+                    $output->writeln('<' . $tag . '>User: ' . $rule->getUser() . ', path: ' . $rule->getPath() . '</' . $tag . '>');
                 } else {
-                    $output->writeln('<' . $tag . '>Group: ' . $rule->group . ', path: ' . ($rule->path ?: '/') . '</' . $tag . '>');
+                    $output->writeln('<' . $tag . '>Group: ' . $rule->getGroup() . ', path: ' . $rule->getPath() . '</' . $tag . '>');
                 }
             }
         }
